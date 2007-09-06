@@ -5,8 +5,8 @@ module ToyCipher
   # Main implementation class, Provides encrypt, decrypt to be overridden. 
   #
   class ToyCipherBase
-
     include ToyCipherUtil
+    
     attr_accessor :plaintext, :ciphertext, :key, :alph
 
     def initialize
@@ -44,7 +44,7 @@ module ToyCipher
       @alph[(@alph.index(chr) + offset) % @alph.length]
     end
 
-        # Modular subtraction
+    # Modular subtraction
     # result = lhs - rhs
     #
     def mod_sub(chr1, chr2)
@@ -71,13 +71,10 @@ module ToyCipher
     #
     def reset_alphabet() @alph = generate_alphabet end
 
-
     # Pad key if needed
     #
     def pad_key(plaintext, key)
-      while key.size < plaintext.size
-        key += key
-      end
+      key += key while key.size < plaintext.size
       key = key.slice(0, plaintext.size) if key.size > plaintext.size
       [plaintext, key]
     end

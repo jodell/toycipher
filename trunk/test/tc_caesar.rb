@@ -1,5 +1,4 @@
 
-puts "#{$:}"
 require 'toycipher'
 require 'test/unit'
 

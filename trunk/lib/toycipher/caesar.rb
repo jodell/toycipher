@@ -8,8 +8,8 @@ module ToyCipher
   class Caesar < ToyCipherBase
     include ToyCipherUtil
 
-    attr_writer :plaintext, :key, :ciphertext, :offset
-  
+    attr_writer :offset
+ 
     def initialize
       super
       @offset = 0

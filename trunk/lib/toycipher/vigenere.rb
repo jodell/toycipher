@@ -7,8 +7,6 @@ module ToyCipher
   #
   class Vigenere < ToyCipherBase
     include ToyCipherUtil
-
-    attr_writer :plaintext, :key, :ciphertext
   
     def initialize
       super

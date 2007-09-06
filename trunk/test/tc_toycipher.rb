@@ -22,7 +22,7 @@ class TestToyCipher < Test::Unit::TestCase
     assert_equal 'NOPQRSTUVWXYZ', @tc.rot13('ABCDEFGHIJKLM')
     assert_not_equal 'MOPQRSTUVWXYY', @tc.rot13('ABCDEFGHIJKLM')
     assert_not_equal 'BOPQRSTUVWXYZ', @tc.rot13('ABCDEFGHIJKLM')
-    assert_not_equal 'ABCDEFGHIJKLM', @tc.rot13('ABCDEFGHIJKLM')
+    assert_not_equal 'ABCDEFGHIJKLM', @tc.rot13('ABCDEFGHIJKLM') # compliments B.B.
     assert_equal @tc.rot13('the quick brown fox jumps over the lazy dog'), 
       "GURDHVPXOEBJASBKWHZCFBIREGURYNMLQBT"
   end
@@ -41,7 +41,9 @@ class TestToyCipher < Test::Unit::TestCase
   end
 
   def test_modular_arithmetic
+    assert_equal @tc.mod_add('A', 'A'), 'A'
     assert_equal @tc.mod_add('A', 'B'), 'B'
+    assert_equal @tc.mod_add('A', 'Z'), 'Z'
     assert_equal @tc.mod_add('B', 'C'), 'D'
     assert_equal @tc.mod_add('X', 'Z'), 'W'
     assert_equal @tc.mod_sub('M', 'A'), 'M'

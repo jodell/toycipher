@@ -13,11 +13,14 @@
 $:.unshift File.join(File.dirname(__FILE__), "/toycipher")
 
 module ToyCipher
+  
   require 'toycipherutil'
   require 'toycipherbase'
   require 'caesar'
   require 'vigenere'
   require 'otp'
+  require 'playfair'
+
 end 
 
 
