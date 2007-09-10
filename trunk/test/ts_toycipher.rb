@@ -1,8 +1,9 @@
 # file ts_toycipher.rb 
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+$:.unshift File.join(File.dirname(__FILE__))
 require 'test/unit'
-require '/home/jodell/toycipher/trunk/test/tc_toycipher'
-require '/home/jodell/toycipher/trunk/test/tc_vigenere'
-require '/home/jodell/toycipher/trunk/test/tc_otp'
-require '/home/jodell/toycipher/trunk/test/tc_caesar'
-
+require 'tc_toycipher'
+require 'tc_vigenere'
+require 'tc_otp'
+require 'tc_caesar'
+require 'tc_playfair'
