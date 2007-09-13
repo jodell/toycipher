@@ -86,6 +86,11 @@ module ToyCipher
       xor results.first, results.last
     end
 
+    def to_s
+      "<%s: id=%d, plaintext='%s', key='%s', ciphertext='%s', alph='%s'>" %
+        [self.class, self.object_id, @plaintext, @key, @ciphertext, @alph]
+    end
+
   end
       
 end
