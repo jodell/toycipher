@@ -5,7 +5,7 @@ module ToyCipher
  class PlayFair < ToyCipherBase
     include ToyCipherUtil
 
-    attr_reader :keyblock, :ommit_letter, :fill_letter
+    attr_reader :keyblock, :ommit_letter, :fill_letter, :transforms
     VALID_OMMIT_LETTERS = ['Q', 'I', 'J']
     OMMIT_DEFAULT = VALID_OMMIT_LETTERS.first
     VALID_FILL_LETTERS = ['X']
@@ -13,7 +13,7 @@ module ToyCipher
 
     def initialize() 
       super
-      set_ommit_letter; set_fill_letter 
+      set_ommit_letter; set_fill_letter; set_tranformations
     end
 
     def set_ommit_letter(l = OMMIT_DEFAULT)
@@ -29,7 +29,7 @@ module ToyCipher
       @plaintext = normalize plaintext
       generate_keyblock key
       stream = prepare_digraphs @plaintext 
-      encrypt_stream stream
+      @ciphertext  = transform_stream stream, @ciphertext, :encrypt
     end
     
     def decrypt(ciphertext = @ciphertext, key = @key)
@@ -37,49 +37,29 @@ module ToyCipher
       @ciphertext = normalize ciphertext
       generate_keyblock key
       stream = pair_digraphs @ciphertext
-      decrypt_stream stream 
+      @plaintext = transform_stream stream, @plaintext, :decrypt
     end
 
-    def decrypt_stream(stream)
-      stream = stream.split(' ') if stream.class == String
-      @plaintext = ''
-      stream.each { |p| @plaintext += (decrypt_digraph p) + ' ' }
-      @plaintext
+    def transform_stream(instream, outstream, mode)
+       instream = instream.split(' ') if instream.class == String
+       instream.each { |p| outstream += (transform_digraph p, mode) + ' ' }
+       outstream
     end
 
-    def decrypt_digraph(str)
-      return 'wtf' if str.size != 2
-      l0 = keyblock_position str[0].chr
-      l1 = keyblock_position str[1].chr
-      x0, y0 = l0.first, l0.last
-      x1, y1 = l1.first, l1.last
-      delta_x = x1 - x0 
-      delta_y = y1 - y0
-      case 
-      when delta_x != 0 && delta_y != 0:
-        l3 = keyblock_letter [x1, y0] 
-        l4 = keyblock_letter [x0, y1]
-        return l3 + l4
-      when delta_x != 0 && delta_y == 0:
-        l3 = keyblock_letter [x0 - 1, y0]
-        l4 = keyblock_letter [x1 - 1, y0]
-        return l3 + l4
-      when delta_x == 0 && delta_y != 0: 
-        l3 = keyblock_letter [x0, y0 - 1]
-        l4 = keyblock_letter [x0, y1 - 1]
-        return l3 + l4
-      when delta_x == 0 && delta_y == 0:
-        return 'insanity'
-      end
+    def set_tranformations
+      @transforms = {}
+      @transforms[:encrypt] = {
+          :rectangle => Proc.new { |x0, y0, x1, y1| [[x1, y0], [x0, y1]] },
+          :same_row => Proc.new { |x0, y0, x1, y1| [[x0 + 1, y0], [x1 + 1, y0]] },
+          :same_col => Proc.new { |x0, y0, x1, y1| [[x0, y0 + 1], [x0, y1 + 1]] }
+      }
+      @transforms[:decrypt] = {
+          :rectangle => Proc.new { |x0, y0, x1, y1| [[x1, y0], [x0, y1]] },
+          :same_row => Proc.new { |x0, y0, x1, y1| [[x0 - 1, y0], [x1 - 1, y0]] },
+          :same_col => Proc.new { |x0, y0, x1, y1| [[x0, y0 - 1], [x0, y1 - 1]] }
+      }
     end
  
-    def encrypt_stream(stream)
-      stream = stream.split(' ') if stream.class == String
-      @ciphertext = ''
-      stream.each { |p| @ciphertext += (encrypt_digraph p) + ' ' }
-      @ciphertext  
-    end
-
     # p0 = (x0, y0), p1 = (x1, y1)
     # returns p2 & p3 where p2 & p3 are the the points that make a rectangle
     # with p0 & p1.  p2 & p3 should be: 
@@ -90,27 +70,21 @@ module ToyCipher
     # x1 - x0 != 0 && y1 - y0 = 0
     #    p2 = (x0 + 1, y0), p3 = (x1 + 1, y0)
     #
-    def encrypt_digraph(str)
-      return 'wtf' if str.size != 2
-      l0 = keyblock_position str[0].chr
-      l1 = keyblock_position str[1].chr
+   def transform_digraph(str, mode)
+      l0 = xy_pos str[0].chr; l1 = xy_pos str[1].chr
       x0, y0 = l0.first, l0.last
       x1, y1 = l1.first, l1.last
-      delta_x = x1 - x0 
-      delta_y = y1 - y0
+      delta_x = x1 - x0; delta_y = y1 - y0
       case 
       when delta_x != 0 && delta_y != 0:
-        l3 = keyblock_letter [x1, y0] 
-        l4 = keyblock_letter [x0, y1]
-        return l3 + l4
+        digraph =  @transforms[mode][:rectangle].call(x0, y0, x1, y1)
+        return letter_at(digraph.first) + letter_at(digraph.last)
       when delta_x != 0 && delta_y == 0:
-        l3 = keyblock_letter [x0 + 1, y0]
-        l4 = keyblock_letter [x1 + 1, y0]
-        return l3 + l4
+        digraph =  @transforms[mode][:same_row].call(x0, y0, x1, y1)
+        return letter_at(digraph.first) + letter_at(digraph.last)
       when delta_x == 0 && delta_y != 0: 
-        l3 = keyblock_letter [x0, y0 + 1]
-        l4 = keyblock_letter [x0, y1 + 1]
-        return l3 + l4
+        digraph =  @transforms[mode][:same_col].call(x0, y0, x1, y1)
+        return letter_at(digraph.first) + letter_at(digraph.last)
       when delta_x == 0 && delta_y == 0:
         return 'insanity'
       end
@@ -118,13 +92,13 @@ module ToyCipher
 
     # Returns [row, col] position of a letter in the keyblock
     #
-    def keyblock_position(letter)
+    def xy_pos(letter)
       [@keyblock.index(letter) % 5, @keyblock.index(letter) / 5]
     end
 
     # Return the letter in the keyblock given a coordinate position
     #
-    def keyblock_letter(pos)
+    def letter_at(pos)
       @keyblock[ (pos.first) % 5 + ( (pos.last % 5) * 5) ]
     end
 
@@ -172,6 +146,7 @@ module ToyCipher
       end
     end
 
+    # TODO
     def to_s() super end 
 
   end # PlayFair

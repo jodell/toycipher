@@ -50,7 +50,7 @@ class TestPlayFairCipher < Test::Unit::TestCase
     b = ToyCipher::ToyCipherBase.new
     assert_equal ( @cipher.keyblock - b.alph.reject!{|l| l == @cipher.ommit_letter} ), []
     @cipher.keyblock do |l|
-      assert_equal l, @cipher.keyblock_letter(@cipher.keyblock_position(l))
+      assert_equal l, @cipher.keyblock_letter(@cipher.xy_pos(l))
     end
   end
 
