@@ -2,11 +2,11 @@
 require 'toycipher'
 require 'test/unit'
 
-class TestPlayFairCipher < Test::Unit::TestCase
+class TestPlayfairCipher < Test::Unit::TestCase
 
   def setup
     # Example courtesy of http://en.wikipedia.org/wiki/Playfair_cipher.html
-    @cipher = ToyCipher::PlayFair.new
+    @cipher = ToyCipher::Playfair.new
     @plaintext = 'Hide the gold in the tree stump'
     @ciphertext = 'BM ND ZB XD KY BE JV DM UI XM MN UV IF '
     @key = 'playfair example'
