@@ -2,7 +2,7 @@
 require 'toycipher'
 
 module ToyCipher
- class PlayFair < ToyCipherBase
+ class Playfair < ToyCipherBase
     include ToyCipherUtil
 
     attr_reader :keyblock, :ommit_letter, :fill_letter, :transforms
@@ -149,7 +149,7 @@ module ToyCipher
     # TODO
     def to_s() super end 
 
-  end # PlayFair
+  end # Playfair
 
 end # ToyCipher
 

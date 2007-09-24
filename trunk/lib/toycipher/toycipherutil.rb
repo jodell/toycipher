@@ -39,6 +39,10 @@ module ToyCipher
      # Normalize a string.  Remove non-alphanumeric characters and upcase it.
      # 
      def normalize(str) str.gsub(/\W/, '').upcase end
+
+     def file2array(file)
+       IO.readlines(file)
+     end
   
   end # ToyCipherUtil
 

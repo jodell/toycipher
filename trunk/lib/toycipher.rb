@@ -21,6 +21,8 @@ module ToyCipher
   require 'otp'
   require 'playfair'
 
+  CIPHERS = %w[caesar otp playfair vigenere shift rot13]
+
 end 
 
 
