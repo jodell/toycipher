@@ -8,12 +8,23 @@ module ToyCipher
     attr_reader :keyblock, :ommit_letter, :fill_letter, :transforms
     VALID_OMMIT_LETTERS = ['Q', 'I', 'J']
     OMMIT_DEFAULT = VALID_OMMIT_LETTERS.first
-    VALID_FILL_LETTERS = ['X']
+    VALID_FILL_LETTERS = ['X', 'Q']
     FILL_DEFAULT = 'X'
 
     def initialize() 
       super
       set_ommit_letter; set_fill_letter; set_tranformations
+    end
+
+    def possible?(str = @ciphertext)
+      !impossible?
+    end
+
+    def impossible?(str = @ciphertext)
+      pair_digraphs(str).split(' ').any? do |pair|
+        #puts "Trying #{pair[0].chr} == #{pair[1].chr}"
+        pair[0] == pair[1]
+      end
     end
 
     def set_ommit_letter(l = OMMIT_DEFAULT)

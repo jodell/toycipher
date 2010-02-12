@@ -60,11 +60,21 @@ module ToyCipher
     end
 
     # Rotate the alphabet, default A = 0.  Other common cases are A = 1.
+    # FIXME
     #
     def rotate_alphabet(offset)
       @alph = generate_alphabet
       (offset % @alph.size).times do @alph.unshift(@alph.pop) end
       @alph
+    end
+
+    ##
+    # FIXME
+    #
+    def rotate_alphabet!(offset)
+      @alph = generate_alphabet
+      (offset % @alph.size).times do @alph.unshift(@alph.pop) end
+      self
     end
 
     # Rest the alphabet to A = 0

@@ -9,10 +9,18 @@ module ToyCipher
     include ToyCipherUtil
 
     attr_writer :offset
+    attr_accessor :guess
  
     def initialize
       super
       @offset = 0
+    end
+
+    def brute
+      (0..25).each do |i|
+        (@guess ||= []) << decrypt(ciphertext, i)
+      end
+      @guess
     end
 
     # Caesar encryption

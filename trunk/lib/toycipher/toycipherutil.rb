@@ -9,6 +9,12 @@ module ToyCipher
       dist_pp distribution(normalize(str), alph) 
     end
 
+    EN_US_FREQ_RANK = %w(E R S T L N) unless defined?(EN_US_FREQ_RANK)
+
+    def show_en_us_freq_rank
+      puts EN_US_FREQ_RANK.join * ', '
+    end
+
     # Generate alphabet
     #
     def generate_alphabet
@@ -26,13 +32,21 @@ module ToyCipher
        str.each_byte { |b| dist[b.chr] = dist[b.chr] + 1 }
        dist
      end
+
+     def map_dist_to_rank(dist, alph = EN_US_FREQ_RANK)
+       dist_to_rank = {}
+       dist.invert.keys.sort.map.each { |count|
+       }
+     end
    
      # Pretty Print of a character frequency hash
      #
      def dist_pp(dist)
        keys = dist.keys.sort
        keys.each { |l| 
-         print "#{l}: "; dist[l].times do print "#" end; print "\t (#{dist[l]})\n"
+         print "#{l}: "; dist[l].times do print "#" end
+         (30 - dist[l]).times { print " " }
+         print "(#{dist[l]})\n"
        }
      end
   
