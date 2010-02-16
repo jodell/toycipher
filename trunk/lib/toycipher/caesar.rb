@@ -33,7 +33,7 @@ module ToyCipher
       #end
 
       @ciphertext = ''
-      normalize(plaintext).each_byte { |b| @ciphertext += mod_shift b.chr, offset }
+      normalize(plaintext).each_byte { |b| @ciphertext += mod_shift b.chr, offset.to_i }
       @ciphertext
     end
 

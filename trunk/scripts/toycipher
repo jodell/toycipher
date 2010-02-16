@@ -4,43 +4,46 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 require 'optparse'
 require 'toycipher'
 
-class OptParseToyCipher
+CIPHERS = ToyCipher::CIPHERS
 
-  CIPHERS = ToyCipher::CIPHERS
+class OptParseToyCipher
   def self.parse args
     begin
+      #puts "CIPHERS: #{CIPHERS * ', '}"
       options = {}
       option_parser = OptionParser.new do |opts|
         opts.on("-h", "--help", "Print this help screen") { puts opts; exit 0; }
-        opts.on("-d", "--debug") { options[:debug] = true }
         opts.on("-k", "--key [key]", "Encryption Key") { |k| options[:key] = k }
         opts.on("-o", "--output-file [file]", "TODO: Output file for results") { |f| 
           options[:outfile] = f }
         opts.on("-i", "--input-file [file]", "TODO: Input file for results") { |f|
           options[:infile] = f }
-        opts.on("-p", "--plaintext [plaintext]", "Plaintext to encrypt") { |p| 
-          options[:plaintext] = p }
-        opts.on("-e", "--encrypt [ciphertext]", "Ciphertext to decrypt") { |e| 
-          options[:ciphertext] = e }
+        opts.on("-d", "--decrypt [ciphertext]", "Ciphertext to decrypt") { |d| 
+          options[:ciphertext] = d }
+        opts.on("-e", "--encrypt [plaintext]", "Plaintext to encrypt") { |e| 
+          options[:plaintext] = e }
         ciphers = CIPHERS.sort.join ','
-        opts.on("-c [cipher]", "--cipher [cipher]", CIPHERS, "List of Ciphers", 
-        " (#{ciphers})") do |c| 
+        opts.on("-c [cipher]", "--cipher [cipher]", CIPHERS, "List of Ciphers:", 
+        "(#{ciphers})") do |c| 
           options[:cipher] = c 
-          options[:cipher][0] = c[0].chr.upcase
+          options[:cipher][0] = c[0].chr.upcase # :(
         end
-        opts.on("-v", "--verbose") { options[:verbose] = true }
+        opts.on("-v", "--verbose") { options[:verbose], options[:debug] = true, true }
       end
       option_parser.parse!(args)
       options
     rescue OptionParser::ParseError => error
       puts error.message
-      exit 1
+      exit -1
     end
   end
 end
 
 options = OptParseToyCipher.parse ARGV
-c = eval "ToyCipher::#{options[:cipher]}.new"
+puts "options: #{options.inspect}" if options[:debug]
+raise ArgumentError, "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless options[:cipher] && 
+  CIPHERS.include?(options[:cipher].downcase)
+c = instance_eval "ToyCipher::#{options[:cipher]}.new"
 #puts options[:plaintext]
 
 puts c.encrypt(options[:plaintext], options[:key]) if !!options[:plaintext]
