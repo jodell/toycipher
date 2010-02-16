@@ -17,7 +17,7 @@ module ToyCipher
     end
 
     def possible?(str = @ciphertext)
-      !impossible?
+      !impossible?(str)
     end
 
     def impossible?(str = @ciphertext)

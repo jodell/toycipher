@@ -43,6 +43,9 @@ class TestPlayfairCipher < Test::Unit::TestCase
     given = 'This is a long test with little repeated digraphs'
     expected = 'TH IS IS AL ON GT ES TW IT HL IT XT LE RE PE AT ED XD IG RA PH SX'
     assert_equal @cipher.prepare_digraphs(given), expected
+
+    # This check is really only for ciphertext
+    assert_equal false,  @cipher.possible?(given.gsub(/\s/, ''))
   end
 
   def test_keyblock_lookup
@@ -57,6 +60,14 @@ class TestPlayfairCipher < Test::Unit::TestCase
   def test_keyblock_generation
     @cipher.generate_keyblock 'testerson'
     assert_equal @cipher.keyblock, ["T", "E", "S", "R", "O", "N", "A", "B", "C", "D", "F", "G", "H", "I", "J", "K", "L", "M", "P", "U", "V", "W", "X", "Y", "Z"]
+  end
+
+  def test_possible
+    assert_equal true, @cipher.possible?(@ciphertext)
+    assert_equal true, @cipher.impossible?('AAXX')
+    assert_equal false, @cipher.possible?('AAXX')
+    assert_equal true, @cipher.possible?('ABDCEFGH')
+    assert_equal true, @cipher.possible?('ABDEEFFH')
   end
 
 end
