@@ -2,6 +2,9 @@
 require 'toycipher'
 
 module ToyCipher
+
+ class PlayfairException < Exception; end
+
  class Playfair < ToyCipherBase
     include ToyCipherUtil
 
@@ -44,11 +47,16 @@ module ToyCipher
     end
     
     def decrypt(ciphertext = @ciphertext, key = @key)
-      @key = normalize key
-      @ciphertext = normalize ciphertext
-      generate_keyblock key
-      stream = pair_digraphs @ciphertext
-      @plaintext = transform_stream stream, @plaintext, :decrypt
+      unless impossible?(ciphertext)
+        @key = normalize key
+        @ciphertext = normalize ciphertext
+        generate_keyblock key
+        stream = pair_digraphs @ciphertext
+        @plaintext = transform_stream stream, @plaintext, :decrypt
+      else
+        # TODO: Have more specific exceptions
+        raise PlayfairException, "Playfair Decryption:  Impossible scenario!"
+      end
     end
 
     def transform_stream(instream, outstream, mode)
@@ -97,6 +105,8 @@ module ToyCipher
         digraph =  @transforms[mode][:same_col].call(x0, y0, x1, y1)
         return letter_at(digraph.first) + letter_at(digraph.last)
       when delta_x == 0 && delta_y == 0:
+        # We should never reach here.  Basically this means that the digraph
+        # is repeated, which violates basic playfair rules.
         return 'insanity'
       end
     end

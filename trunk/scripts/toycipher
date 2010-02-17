@@ -46,7 +46,20 @@ raise ArgumentError, "No cipher specified!  Expected one of #{CIPHERS * ', '}" u
 c = instance_eval "ToyCipher::#{options[:cipher]}.new"
 #puts options[:plaintext]
 
-puts c.encrypt(options[:plaintext], options[:key]) if !!options[:plaintext]
-puts c.decrypt(options[:ciphertext], options[:key]) if !!options[:ciphertext]
+begin
+  @result = 
+    if options[:plaintext]
+      c.encrypt(options[:plaintext], options[:key]) if !!options[:plaintext]
+    elsif options[:ciphertext]
+      c.decrypt(options[:ciphertext], options[:key]) if !!options[:ciphertext]
+    else
+  
+    end
+rescue Exception => pf
+  puts "Could not decrypt ciphertext: #{pf.message}"
+  exit -1
+end
+
+puts @result
 
 
