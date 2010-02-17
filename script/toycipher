@@ -14,19 +14,23 @@ class OptParseToyCipher
       option_parser = OptionParser.new do |opts|
         opts.on("-h", "--help", "Print this help screen") { puts opts; exit 0; }
         opts.on("-k", "--key [key]", "Encryption Key") { |k| options[:key] = k }
-        opts.on("-o", "--output-file [file]", "TODO: Output file for results") { |f| 
+        opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") { |f| 
           options[:outfile] = f }
-        opts.on("-i", "--input-file [file]", "TODO: Input file for results") { |f|
-          options[:infile] = f }
+        opts.on("-i", "--input-file file", "Input file for encryption or decryption") do |f|
+          options[:infile] = f
+        end
         opts.on("-d", "--decrypt [ciphertext]", "Ciphertext to decrypt") { |d| 
           options[:ciphertext] = d }
         opts.on("-e", "--encrypt [plaintext]", "Plaintext to encrypt") { |e| 
           options[:plaintext] = e }
         ciphers = CIPHERS.sort.join ','
-        opts.on("-c [cipher]", "--cipher [cipher]", CIPHERS, "List of Ciphers:", 
+        opts.on("-c", "--cipher cipher", CIPHERS, "List of Ciphers:", 
         "(#{ciphers})") do |c| 
           options[:cipher] = c 
           options[:cipher][0] = c[0].chr.upcase # :(
+        end
+        opts.on("-t", "--transpose", "Transpose m x n lines of text to be n x m") do
+          options[:transpose] = true
         end
         opts.on("-v", "--verbose") { options[:verbose], options[:debug] = true, true }
       end
@@ -56,10 +60,14 @@ begin
   
     end
 rescue Exception => pf
-  puts "Could not decrypt ciphertext: #{pf.message}"
+  STDOUT.puts "Could not decrypt ciphertext: #{pf.message}"
   exit -1
 end
 
-puts @result
+if options[:outfile]
+  File.open(options[:outfile], 'w') { |f| f << @result }
+else
+  STDOUT.puts @result 
+end
 
 
