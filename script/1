@@ -23,8 +23,6 @@ class OptParseToyCipher
           options[:ciphertext] = d }
         opts.on("-e", "--encrypt [plaintext]", "Plaintext to encrypt") { |e| 
           options[:plaintext] = e }
-        opts.on("-p", "--pretty", "Pretty output by replacing Z with space") { |p|
-          options[:pretty] = true }
         ciphers = CIPHERS.sort.join ','
         opts.on("-c", "--cipher cipher", CIPHERS, "List of Ciphers:", 
         "(#{ciphers})") do |c| 
@@ -45,61 +43,31 @@ class OptParseToyCipher
   end
 end
 
-@options = OptParseToyCipher.parse ARGV
-puts "options: #{options.inspect}" if @options[:debug]
-raise ArgumentError, "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless @options[:cipher] && 
-  CIPHERS.include?(@options[:cipher].downcase)
+options = OptParseToyCipher.parse ARGV
+puts "options: #{options.inspect}" if options[:debug]
+raise ArgumentError, "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless options[:cipher] && 
+  CIPHERS.include?(options[:cipher].downcase)
+c = instance_eval "ToyCipher::#{options[:cipher]}.new"
 #puts options[:plaintext]
 
-
-
-if keys = @options[:key]
-  keys.split(',').each { |k| (@keys ||= []) << k.strip }
-end
-#puts "keys: #{@keys}"
-
-def print_result(results)
-  results.each do |result|
-    # Pretty output by guessing that 'Z' is a space (risky)
-    if @options[:pretty]
-      case @options[:cipher]
-      when /playfair/i
-        result.gsub!(' ', '')
-        result.gsub!(/x/i, '')
-      end
-      result.gsub!(/z/i, ' ')
+begin
+  @result = 
+    if options[:plaintext]
+      c.encrypt(options[:plaintext], options[:key]) if !!options[:plaintext]
+    elsif options[:ciphertext]
+      c.decrypt(options[:ciphertext], options[:key]) if !!options[:ciphertext]
+    else
+  
     end
-    #puts "result: #{result}"
-    (@all_results ||= []) << result
-  end
-
-  if @options[:outfile]
-    File.open(@options[:outfile], 'w') { |f| f << @all_results * "\n" }
-  else
-    STDOUT.puts @all_results * "\n"
-  end
+rescue Exception => pf
+  STDOUT.puts "Could not decrypt ciphertext: #{pf.message}"
+  exit -1
 end
 
-@keys.each do |k|
-  # FIXME:  Move this
-  @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new"
-  #puts "Running on key: #{k}"
-  begin
-    @result =
-      if @options[:plaintext]
-        @cipher.encrypt(@options[:plaintext], k) if @options[:plaintext]
-      elsif @options[:ciphertext]
-        @cipher.decrypt(@options[:ciphertext], k) if @options[:ciphertext]
-      else
-      end
-    #puts "calc result: #{@result}"
-  rescue Exception => pf
-    STDOUT.puts "Could not decrypt ciphertext: #{pf.message}"
-    exit -1
-  end
-  (@results ||= []) << @result
+if options[:outfile]
+  File.open(options[:outfile], 'w') { |f| f << @result }
+else
+  STDOUT.puts @result 
 end
-
-print_result(@results) if @results
 
 
