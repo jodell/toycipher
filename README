@@ -1,0 +1,12 @@
+== ToyCipher ==
+
+A ruby implementation of classic ciphers, including:
+
+* PlayFair
+* One-time Pad
+* Vigenere
+* Caesar
+
+== Author ==
+
+Jeffrey O'Dell <jefferey dot odell at gmail dot com>

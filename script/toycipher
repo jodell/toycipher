@@ -19,6 +19,7 @@ class OptParseToyCipher
         opts.on("-i", "--input-file file", "Input file for encryption or decryption") do |f|
           options[:infile] = f
         end
+        opts.on("--demo", "Example Ciphers") { options[:demo] = true }
         opts.on("-d", "--decrypt [ciphertext]", "Ciphertext to decrypt") { |d| 
           options[:ciphertext] = d }
         opts.on("-e", "--encrypt [plaintext]", "Plaintext to encrypt") { |e| 
@@ -79,6 +80,12 @@ def print_result(results)
     STDOUT.puts @all_results * "\n"
   end
 end
+
+def prepare_input
+  stream = IO.readlines @options[:infile] 
+end
+
+prepare_input_file if @options[:infile]
 
 @keys.each do |k|
   # FIXME:  Move this

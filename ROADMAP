@@ -1,0 +1,19 @@
+
+0.1
+
+* Playfair
+* Caesar
+* Vigenere
+* OTP
+
+0.2
+
+* CLI script
+* tests
+* documentation
+
+0.3 
+
+* Support matrix transposition
+* Brute-force heuristic
+
