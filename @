@@ -5,7 +5,7 @@ require 'optparse'
 require 'toycipher'
 
 CIPHERS = ToyCipher::CIPHERS
-TOYCIPHER_CLI_VERSION_STR = "ToyCipher v0.2 by Jeffrey O'Dell <jeffrey.odell@gmail.com>, http://github.com/jodell/toycipher".freeze
+TOYCIPHER_CLI_VERSION_STR = "ToyCipher v0.2 by Jeffrey O'Dell".freeze
 class OptParseToyCipher
   def self.parse args
     begin
@@ -36,7 +36,7 @@ class OptParseToyCipher
           options[:transpose] = true
         end
         opts.on("-v", "--verbose") { options[:verbose], options[:debug] = true, true }
-        opts.on("-V", "--version") { puts "#{TOYCIPHER_CLI_VERSION_STR}"; exit 0; }
+        opts.on("-V", "--version") { puts "#{TOYCIPHER_CLI_VERSION_STR}" }
       end
       option_parser.parse!(args)
       options
