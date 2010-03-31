@@ -3,16 +3,18 @@
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 require 'optparse'
 require 'toycipher'
+require 'pp'
 
 CIPHERS = ToyCipher::CIPHERS
 TOYCIPHER_CLI_VERSION_STR = "ToyCipher v0.2 by Jeffrey O'Dell <jeffrey.odell@gmail.com>, http://github.com/jodell/toycipher".freeze
 class OptParseToyCipher
   def self.parse args
     begin
-      #puts "CIPHERS: #{CIPHERS * ', '}"
+      #puts "CIPHERS: #{CIPHERS * ', '}}" "
       options = { }
       ciphers = CIPHERS.sort * ', '
       option_parser = OptionParser.new do |opts|
+        opts.banner = "ToyCipher: A utility for encryption & decryption with classic ciphers"
         opts.on("-h", "--help", "Print this help screen") { puts opts; exit 0; }
         opts.on("-k", "--key key", "Encryption Key") { |k| options[:key] = k }
         opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") { |f| 
@@ -22,9 +24,9 @@ class OptParseToyCipher
         end
         opts.on("--demo", "Example Ciphers") { options[:demo] = true }
         opts.on("-d", "--decrypt [ciphertext]", "Ciphertext to decrypt") { |d| 
-          options[:ciphertext] = d }
+          options[:ciphertext] = d || true }
         opts.on("-e", "--encrypt [plaintext]", "Plaintext to encrypt") { |e| 
-          options[:plaintext] = e }
+          options[:plaintext] = e || true }
         opts.on("-p", "--pretty", "Pretty output by replacing Z with space") { |p|
           options[:pretty] = true }
         opts.on("-c", "--cipher cipher", CIPHERS, "List of Ciphers:", 
@@ -35,7 +37,8 @@ class OptParseToyCipher
         opts.on("-t", "--transpose", "Transpose m x n lines of text to be n x m") do
           options[:transpose] = true
         end
-        opts.on("-v", "--verbose") { options[:verbose], options[:debug] = true, true }
+        opts.on("-v", "--verbose") { options[:verbose] = true }
+        opts.on("--debug") { options[:debug] = true }
         opts.on("-V", "--version") { puts "#{TOYCIPHER_CLI_VERSION_STR}"; exit 0; }
       end
       option_parser.parse!(args)
@@ -48,7 +51,7 @@ class OptParseToyCipher
 end
 
 @options = OptParseToyCipher.parse ARGV
-puts "options: #{options.inspect}" if @options[:debug]
+puts "options: #{@options.inspect}" if @options[:debug]
 raise ArgumentError, "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless @options[:cipher] && 
   CIPHERS.include?(@options[:cipher].downcase)
 #puts options[:plaintext]
@@ -82,16 +85,24 @@ def print_result(results)
   end
 end
 
-def prepare_input
-  stream = IO.readlines @options[:infile] 
+def prepare_input_file
+  stream = IO.readlines(@options[:infile])
+  n_rows = stream.size
+  stream = stream.map { |l| l.chomp }.join
+  #puts "stream: #{stream}"
+  #puts "options[:plaintext]: #{@options[:plaintext].class}"
+  @options[:ciphertext] = stream if @options[:ciphertext]
+  @options[:plaintext] = stream if @options[:plaintext]
 end
 
 prepare_input_file if @options[:infile]
+pp @options if @options[:debug]
 
 @keys.each do |k|
+
   # FIXME:  Move this
   @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new"
-  #puts "Running on key: #{k}"
+  puts "Running on key: #{k}" if @options[:verbose]
   begin
     @result =
       if @options[:plaintext]
@@ -100,9 +111,10 @@ prepare_input_file if @options[:infile]
         @cipher.decrypt(@options[:ciphertext], k) if @options[:ciphertext]
       else
       end
-    #puts "calc result: #{@result}"
+    puts "calc result: #{@result}" if @options[:debug]
   rescue Exception => pf
     STDOUT.puts "Could not decrypt ciphertext: #{pf.message}"
+    puts pf.backtrace * "\n" if @options[:debug]
     exit -1
   end
   (@results ||= []) << @result

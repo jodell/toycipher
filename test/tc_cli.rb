@@ -1,4 +1,5 @@
 
+$: << File.expand_path(File.dirname(__FILE__)) + '/../lib/'
 require 'toycipher'
 require 'test/unit'
 require 'fileutils'
@@ -36,7 +37,11 @@ SHMOO
   end
 
   def teardown
-    TF.each { |k, f| FileUtils.rm f if File.exists?(f) }
+    #TF.each { |k, f| FileUtils.rm f if File.exists?(f) }
+  end
+
+  def verbose?
+    ENV['verbose']
   end
 
   def test_cli_help
@@ -76,6 +81,7 @@ SHMOO
     args = "-e '#{@pt}' -c playfair -k '#{@k}' -o #{TF[:out_f]}"
     #puts "Running '#{@clie} #{args}'"
     cli_out = %x[#{@cli} #{args}].chomp
+    puts cli_out if verbose?
     assert_equal '', cli_out
     assert_equal true, File.exists?(TF[:out_f])
     #assert_equal @pf_ciphertext, IO.readlines(@outfile).first.chomp
@@ -86,16 +92,20 @@ SHMOO
 
   def test_multi_keys
     args = "-e '#{@pt}' -c playfair -k '#{@k},#{@k2}' "
-    #puts "Running '#{@clie} #{args}'"
+    puts "Running '#{@clie} #{args}'" if verbose?
     cli_out = %x[#{@cli} #{args}].chomp
-    #puts cli_out
+    puts cli_out if verbose?
     assert_equal [@pf_ciphertext, @pf_ciphertext2].join("\n"), cli_out
   end
 
   def test_shmoocon2010_part1
     shmooct = File.open(TF[:shmoocon2010_1], 'w') { |f| f << SHMOO_CT }
-    args = "-e -i #{TF[:shmoocon2010_1]} -c caesar -k 'G'"
+    args = "-d -i #{TF[:shmoocon2010_1]} -c caesar -k 7" #'G'"
+    puts "Running: #{@cli} #{args}"
+    puts "File \n#{TF[:shmoocon2010_1]}"
+    puts `cat #{TF[:shmoocon2010_1]}`
     cli_out = %x[#{@cli} #{args}].chomp
+    puts "Output: \n#{cli_out}"
   end
 
 end
