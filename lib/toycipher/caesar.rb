@@ -37,7 +37,7 @@ module ToyCipher
       offset = normalize_key(offset)
       #puts "Trying to decrypt #{ciphertext} with offset #{offset}:#{offset.class}"
       @plaintext = '' 
-      ciphertext.each_byte { |b| @plaintext += mod_shift(b.chr, -offset) }
+      normalize(ciphertext).each_byte { |b| @plaintext += mod_shift(b.chr, -offset) }
       @plaintext
     end 
 

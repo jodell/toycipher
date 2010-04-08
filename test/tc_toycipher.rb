@@ -1,4 +1,4 @@
-
+$: << File.expand_path(File.dirname(__FILE__) + '/../lib/')
 require 'test/unit'
 require 'toycipher'
 
@@ -58,4 +58,25 @@ class TestToyCipher < Test::Unit::TestCase
     assert_equal @tc.otp(plaintext, key), ciphertext
   end
 
+  def test_matrix_transposition
+    matrix = ['AB', 'AB']
+    ans = ['AA', 'BB']
+    assert_equal ToyCipher::ToyCipherUtil.transpose(matrix), ans
+    assert_equal ToyCipher::ToyCipherUtil.transpose2(matrix), ans
+    matrix = ['ABC', 'DEF', 'GHI']
+    ans = ['ADG', 'BEH', 'CFI']
+    assert_equal ToyCipher::ToyCipherUtil.transpose(matrix), ans
+    assert_equal ToyCipher::ToyCipherUtil.transpose2(matrix), ans
+  end
+
+  def test_matrix_trans_exception
+    matrix = ['AB', 'ABC']
+    assert_raise Exception do
+      ToyCipher::ToyCipherUtil.transpose(matrix)
+    end
+    assert_raise Exception do 
+      ToyCipher::ToyCipherUtil.transpose2(matrix)
+    end
+  end
 end
+

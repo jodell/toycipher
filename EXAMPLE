@@ -1,0 +1,22 @@
+
+== Caesar ==
+
+> toycipher -e caesar -k G foo 
+MVV
+> toycipher -d caesar -k G mvv 
+FOO
+
+== Multiple keys ==
+
+> toycipher -e caesar -k G,M,A,R,K "The moose is loose"
+AOLTVVZLPZSVVZL
+GURZBBFRVFYBBFR
+UIFNPPTFJTMPPTF
+LZWEGGKWAKDGGKW
+ESPXZZDPTDWZZDP
+
+== Playfair ==
+
+
+
+
