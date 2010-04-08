@@ -4,6 +4,10 @@ require 'toycipher'
 require 'test/unit'
 require 'fileutils'
 
+def debug?
+  ENV['DEBUG'] || ENV['debug']
+end
+
 class TestCli < Test::Unit::TestCase
 
   SHMOO_ANS_1 = <<-SHMOO
@@ -55,31 +59,32 @@ SHMOO
   end
 
   def test_cli_caesar
-    args = "-e 'foobar' -c caesar -k2"
+    args = "-e caesar foobar -k2"
     #assert_equal "HQQDCT", %x[#{@cli} #{args}].chomp
   end
 
   def test_cli_playfair
-    args = "-e '#{@pt}' -c playfair -k '#{@k}'"
+    args = "-e playfair '#{@pt}' -k '#{@k}'"
     cli_out = %x[#{@cli} #{args}].chomp
     assert_equal @pf_ciphertext, cli_out 
     assert_equal ToyCipher::Playfair.new.encrypt(@pt, @k), cli_out
   end
 
   def test_cli_playfair2
-    args =  %Q(-d "FDSDDSSS" -c playfair -k "EFF")
+    args =  %Q(-d playfair "FDSDDSSS" -k "EFF")
     cli_out = %x[#{@cli} #{args}].chomp.strip
+    puts cli_out if debug?
     assert_equal true, !!cli_out.match(/could not decrypt/i)
-    args = "-p -d '#{@pf_ciphertext}' -c playfair -k '#{@k}'"
+    args = "-p -d playfair '#{@pf_ciphertext}' -k '#{@k}'"
     cli_out = %x[#{@cli} #{args}].chomp
-    args = "-p -d '#{@pf_ciphertext}' -c playfair -k '#{@k}' -p"
+    args = "-p -d playfair '#{@pf_ciphertext}' -k '#{@k}' -p"
     cli_out = %x[#{@cli} #{args}].chomp
     assert_equal "HIDETHEGOLDINTHETREESTUMP", cli_out
   end
 
   def test_cli_out_file
-    args = "-e '#{@pt}' -c playfair -k '#{@k}' -o #{TF[:out_f]}"
-    #puts "Running '#{@clie} #{args}'"
+    args = "-e playfair '#{@pt}' -k '#{@k}' -o #{TF[:out_f]}"
+    #puts "Running '#{@cli} #{args}'"
     cli_out = %x[#{@cli} #{args}].chomp
     puts cli_out if verbose?
     assert_equal '', cli_out
@@ -91,21 +96,39 @@ SHMOO
   end
 
   def test_multi_keys
-    args = "-e '#{@pt}' -c playfair -k '#{@k},#{@k2}' "
-    puts "Running '#{@clie} #{args}'" if verbose?
+    args = "-e playfair '#{@pt}' -k '#{@k},#{@k2}' "
+    puts "Running '#{@cli} #{args}'" if verbose?
     cli_out = %x[#{@cli} #{args}].chomp
     puts cli_out if verbose?
     assert_equal [@pf_ciphertext, @pf_ciphertext2].join("\n"), cli_out
   end
 
+  def test_examples
+    ct = "The moose is loose"
+    k = "G,M,A,R,K"
+    ct_ans = <<-ANS
+AOLTVVZLPZSVVZL
+GURZBBFRVFYBBFR
+UIFNPPTFJTMPPTF
+LZWEGGKWAKDGGKW
+ESPXZZDPTDWZZDP
+ANS
+
+    args = "-e caesar '#{ct}' -k '#{k}' "
+    puts "Running '#{@cli} #{args}'" if verbose?
+    cli_out = %x[#{@cli} #{args}]
+    puts cli_out if verbose?
+    assert_equal ct_ans, cli_out
+  end
+
   def test_shmoocon2010_part1
     shmooct = File.open(TF[:shmoocon2010_1], 'w') { |f| f << SHMOO_CT }
-    args = "-d -i #{TF[:shmoocon2010_1]} -c caesar -k 7" #'G'"
-    puts "Running: #{@cli} #{args}"
-    puts "File \n#{TF[:shmoocon2010_1]}"
-    puts `cat #{TF[:shmoocon2010_1]}`
+    args = "-i #{TF[:shmoocon2010_1]} -d caesar -kG"
+    puts "Running: #{@cli} #{args}" if debug?
+    puts "File \n#{TF[:shmoocon2010_1]}" if debug?
+    puts `cat #{TF[:shmoocon2010_1]}` if debug?
     cli_out = %x[#{@cli} #{args}].chomp
-    puts "Output: \n#{cli_out}"
+    puts "Output: \n#{cli_out}" if debug?
   end
 
 end
