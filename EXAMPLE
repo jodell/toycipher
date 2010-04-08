@@ -1,6 +1,8 @@
 
 == Caesar ==
 
+* Basic caesar cipher
+
 > toycipher -e caesar -k G foo 
 MVV
 > toycipher -d caesar -k G mvv 
@@ -17,6 +19,13 @@ ESPXZZDPTDWZZDP
 
 == Playfair ==
 
+> toycipher -e playfair -k 'playfair example' 'Hide the gold in the tree stump'
+BM ND ZB XD KY BE JV DM UI XM MN UV IF 
 
+* Decrypt with pretty print:
 
+> toycipher -d playfair -p -k 'playfair example' 'BM ND ZB XD KY BE JV DM UI XM MN UV IF'
+HIDETHEGOLDINTHETREESTUMP
+
+=== Test for Playfair possibility ===
 

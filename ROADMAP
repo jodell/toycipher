@@ -14,6 +14,14 @@
 
 0.3 
 
+* Support reading from STDIN
 * Support matrix transposition
+
+1.1 
+
+* Rudimentary frequency analysis 
+
+1.2
+
 * Brute-force heuristic
 
