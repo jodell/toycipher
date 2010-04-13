@@ -2,11 +2,11 @@
 
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 require 'optparse'
+require 'fcntl' # STDIN
 require 'toycipher'
 require 'pp'
 
 CIPHERS = ToyCipher::CIPHERS
-TOYCIPHER_CLI_VERSION_STR = "ToyCipher v0.2 by Jeffrey O'Dell <jeffrey.odell@gmail.com>, http://github.com/jodell/toycipher"
 class OptParseToyCipher
   def self.parse args
     begin
@@ -14,25 +14,33 @@ class OptParseToyCipher
       ciphers = CIPHERS.sort * ', '
       option_parser = OptionParser.new do |opts|
         opts.banner = "ToyCipher: A utility for encryption & decryption with classic ciphers"
+        opts.on("--debug", "Debug mode") { options[:debug] = true }
         opts.on("-h", "--help", "Print this help screen") { puts opts; exit 0; }
-        opts.on("-k", "--key key(s)", "Encryption Key(s) separated by ','") { |k| options[:key] = k }
-        opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") { |f| 
-          options[:outfile] = f 
+        opts.on("-f", "--fill letter", "Fill letter for digraphs (playfair), X otherwise") { |fill|
+          puts "Set options[:fill] to #{fill}" if options[:debug]
+          options[:fill] = fill
         }
-        opts.on("-i", "--input-file file", "Input file for encryption or decryption") { |f|
+        opts.on("-k", "--key key(s)", "Encryption Key(s) separated by ','") { |k| 
+          puts "Set key to '#{k}'" if options[:debug]
+          options[:key] = k 
+        }
+        opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") do |f| 
+          options[:outfile] = f 
+        end 
+        opts.on("-i", "--input-file file", "Input file for encryption or decryption") do |f|
           options[:infile] = f
-        } 
+        end 
         opts.on("--demo", "Example Ciphers") { options[:demo] = true }
-        opts.on("-d", "--decrypt cipher", CIPHERS, "Decrypt ciphertext with cipher") { |c| 
+        opts.on("-d", "--decrypt cipher", CIPHERS, "Decrypt ciphertext with cipher") do |c| 
           options[:cipher] = c 
           options[:cipher][0] = c[0].chr.upcase # :(
           options[:decrypt] = options[:cipher] 
-        }
-        opts.on("-e", "--encrypt cipher", CIPHERS, "Encrypt plaintext with cipher") { |c| 
+        end 
+        opts.on("-e", "--encrypt cipher", CIPHERS, "Encrypt plaintext with cipher") do |c| 
           options[:cipher] = c
           options[:cipher][0] = c[0].chr.upcase # :(
           options[:encrypt] = options[:cipher]
-        }
+        end 
         opts.on("-p", "--pretty", "Pretty output by replacing Z with space") { |p|
           options[:pretty] = true }
         opts.on("-c", "--ciphers", CIPHERS, "List of Ciphers:", "(#{ciphers})") do |c| 
@@ -42,9 +50,8 @@ class OptParseToyCipher
         opts.on("-t", "--transpose", "Transpose m x n lines of text to be n x m") do
           options[:transpose] = true
         end
-        opts.on("-v", "--verbose") { options[:verbose] = true }
-        opts.on("--debug") { options[:debug] = true }
-        opts.on("-V", "--version") { puts "#{TOYCIPHER_CLI_VERSION_STR}"; exit 0; }
+        opts.on("-v", "--verbose", "Verbose setting") { options[:verbose] = true }
+        opts.on("-V", "--version", "Show version info") { puts "#{ToyCipher::Version}"; exit 0; }
       end
       option_parser.parse!(args)
       options
@@ -62,19 +69,24 @@ puts "ARGV after parse: #{ARGV}" if @options[:debug]
 #@options[:plaintext] ||= @input if @input
 puts "@input after parse: #{@input}" if @options[:debug]
 
+# Read STDIN
+@stdin = STDIN.read if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+puts "STDIN: #{@stdin.to_s}" if @options[:debug]
+
 if cipher = @options[:encrypt]
   raise "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless CIPHERS.include?(cipher.downcase)
+  @options[:plaintext] ||= @stdin if @stdin
   @options[:plaintext] ||= @input if @input
-  puts "encrypt - @input after parse: #{@input}" if @options[:debug]
 elsif cipher = @options[:decrypt]
   raise "No cipher specified!  Expected one of #{CIPHERS * ', '}" unless CIPHERS.include?(cipher.downcase)
+  @options[:ciphertext] ||= @stdin if @stdin
   @options[:ciphertext] ||= @input if @input
-  puts "decrypt - @input after parse: #{@input}" if @options[:debug]
 end
 
 if @options[:transpose] && @input
   @transposed = @input.split("\n")
 end
+
 
 if keys = @options[:key]
   keys.split(',').each { |k| (@keys ||= []) << k.strip }
@@ -83,12 +95,12 @@ end
 
 def print_result(results)
   results.each do |result|
-    # Pretty output by guessing that 'Z' is a space (risky)
+    # Pretty output by guessing that 'Z' (fill letter for playfair) is a space (risky)
     if @options[:pretty]
       case @options[:cipher]
       when /playfair/i
         result.gsub!(' ', '')
-        result.gsub!(/x/i, '')
+        result.gsub!(/#{@options[:fill] || 'x'}/i, '')
       end
       result.gsub!(/z/i, ' ')
     end
@@ -119,6 +131,11 @@ pp @options if @options[:debug]
 if @options[:key]
   @keys.each do |k|
     @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new" # shouldn't have to do this per key
+    if @options[:fill]
+      puts "Fill letter set to #{@options[:fill]}" if @options[:debug]
+      @cipher.set_fill_letter @options[:fill] if @cipher.respond_to?(:set_fill_letter)
+    end
+    
     puts "Running on key: #{k}" if @options[:verbose]
     begin
       @result =

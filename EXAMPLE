@@ -17,6 +17,22 @@ UIFNPPTFJTMPPTF
 LZWEGGKWAKDGGKW
 ESPXZZDPTDWZZDP
 
+== Reading from STDIN ==
+
+> echo "The moose is loose" | toycipher -e caesar -k G,M,A,R,K 
+AOLTVVZLPZSVVZL
+GURZBBFRVFYBBFR
+UIFNPPTFJTMPPTF
+LZWEGGKWAKDGGKW
+ESPXZZDPTDWZZDP
+
+> toycipher -e caesar -k G,M,A,R,K < /tmp/moose
+AOLTVVZLPZSVVZL
+GURZBBFRVFYBBFR
+UIFNPPTFJTMPPTF
+LZWEGGKWAKDGGKW
+ESPXZZDPTDWZZDP
+
 == Playfair ==
 
 > toycipher -e playfair -k 'playfair example' 'Hide the gold in the tree stump'
@@ -31,4 +47,10 @@ HI DE TH EG OL DI NT HE TR EX ES TU MP
 HIDETHEGOLDINTHETREESTUMP
 
 === Test for Playfair possibility ===
+
+Digraphs (two character pairs) in playfair ciphertext are by definition not allowed to be repeated.
+
+> echo "BARR" | script/toycipher -d playfair -k foo
+Could not decrypt ciphertext: Playfair Decryption:  Impossible scenario!
+
 

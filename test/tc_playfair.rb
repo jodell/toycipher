@@ -52,7 +52,7 @@ class TestPlayfairCipher < Test::Unit::TestCase
     assert_equal @cipher.prepare_digraphs(given), expected
 
     # This check is really only for ciphertext
-    assert_equal false,  @cipher.possible?(given.gsub(/\s/, ''))
+    assert_equal false, @cipher.possible?(given.gsub(/\s/, ''))
   end
 
   def test_keyblock_lookup
