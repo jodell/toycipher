@@ -24,6 +24,13 @@ class TestPlayfairCipher < Test::Unit::TestCase
     assert_equal @cipher.normalize(@plaintext), @cipher.normalize(@cipher.decrypt(@ciphertext, @key)).delete(@cipher.fill_letter)
   end
 
+  def test_fill_letter
+    %w(Q Z W).each do |fl|
+      @cipher.set_fill_letter fl
+      assert_equal @cipher.prepare_digraphs('BOO'), "BO #{fl}O"
+    end
+  end
+
   def test_set_ommit_letter
     assert_equal @cipher.ommit_letter, 'Q'
     assert_equal @cipher.set_ommit_letter('a'), nil 

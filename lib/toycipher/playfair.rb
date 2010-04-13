@@ -35,7 +35,7 @@ module ToyCipher
     end
  
     def set_fill_letter(l = FILL_DEFAULT)
-      @fill_letter = l.upcase if VALID_FILL_LETTERS.member? l.upcase
+      @fill_letter = l.upcase #if VALID_FILL_LETTERS.member? l.upcase
     end
    
     def encrypt(plaintext = @plaintext, key = @key)

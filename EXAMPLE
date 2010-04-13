@@ -22,7 +22,10 @@ ESPXZZDPTDWZZDP
 > toycipher -e playfair -k 'playfair example' 'Hide the gold in the tree stump'
 BM ND ZB XD KY BE JV DM UI XM MN UV IF 
 
-* Decrypt with pretty print:
+> toycipher -d playfair  -k 'playfair example' 'BM ND ZB XD KY BE JV DM UI XM MN UV IF'
+HI DE TH EG OL DI NT HE TR EX ES TU MP 
+
+* Decrypt with pretty print, remove spaces and X's (or whatever the fill letter is for playfair):
 
 > toycipher -d playfair -p -k 'playfair example' 'BM ND ZB XD KY BE JV DM UI XM MN UV IF'
 HIDETHEGOLDINTHETREESTUMP
