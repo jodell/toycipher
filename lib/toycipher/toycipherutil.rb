@@ -4,7 +4,7 @@ module ToyCipher
   module ToyCipherUtil
     EN_US_FREQ_RANK = %w(E R S T L N) unless defined?(EN_US_FREQ_RANK)
     
-    def frequency(str, alph = @@ALPH)
+    def frequency(str, alph = @alph)
       dist_pp distribution(normalize(str), alph) 
     end
 
@@ -24,6 +24,7 @@ module ToyCipher
       str.each_byte { |b| dist[b.chr] = dist[b.chr] + 1 }
       dist
     end
+
     def map_dist_to_rank(dist, alph = EN_US_FREQ_RANK)
       dist_to_rank = {}
       dist.invert.keys.sort.map.each { |count|
@@ -34,11 +35,17 @@ module ToyCipher
     #
     def dist_pp(dist)
       keys = dist.keys.sort
+      max = dist.values.max + 2
       keys.each { |l| 
         print "#{l}: "; dist[l].times do print "#" end
-        (30 - dist[l]).times { print " " }
+        (max - dist[l]).times { print " " }
         print "(#{dist[l]})\n"
       }
+      puts dist_csv(dist)
+    end
+
+    def dist_csv(dist)
+      dist.sort.inject([]) { |acc, pair| acc << pair.last }.join(',')
     end
   
     # Normalize a string.  Remove non-alphanumeric characters and upcase it.

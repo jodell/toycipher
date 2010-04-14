@@ -16,6 +16,7 @@ class OptParseToyCipher
         opts.banner = "ToyCipher: A utility for encryption & decryption with classic ciphers"
         opts.on("--debug", "Debug mode") { options[:debug] = true }
         opts.on("-h", "--help", "Print this help screen") { puts opts; exit 0; }
+        opts.on("-a", "--analysis", "Print frequency analysis") { options[:analysis] = true }
         opts.on("-f", "--fill letter", "Fill letter for digraphs (playfair), X otherwise") { |fill|
           puts "Set options[:fill] to #{fill}" if options[:debug]
           options[:fill] = fill
@@ -41,7 +42,7 @@ class OptParseToyCipher
           options[:cipher][0] = c[0].chr.upcase # :(
           options[:encrypt] = options[:cipher]
         end 
-        opts.on("-p", "--pretty", "Pretty output by replacing Z with space") { |p|
+        opts.on("-p", "--pretty", "Pretty output by replacing Z with space") { 
           options[:pretty] = true }
         opts.on("-c", "--ciphers", CIPHERS, "List of Ciphers:", "(#{ciphers})") do |c| 
           options[:cipher] = c 
@@ -86,7 +87,6 @@ end
 if @options[:transpose] && @input
   @transposed = @input.split("\n")
 end
-
 
 if keys = @options[:key]
   keys.split(',').each { |k| (@keys ||= []) << k.strip }
@@ -156,5 +156,19 @@ if @options[:key]
 end
 
 print_result(@results) if @results
+
+@cipher ||= ToyCipher::ToyCipherBase.new
+
+if @options[:analysis] 
+  if @options[:decrypt]
+    @cipher.frequency @options[:ciphertext]
+  elsif @options[:encrypt]
+    @cipher.frequency @options[:plaintext]
+  elsif @stdin
+    @cipher.frequency @stdin
+  elsif @input
+    @cipher.frequency @input
+  end
+end
 
 
