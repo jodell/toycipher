@@ -28,15 +28,20 @@ module ToyCipher
 
     # Perform modular subtraction per character as: lhs - rhs
     # TODO - Determine if this should actually go in ToyCipherUtil
+    # TODO - Performance comparison of implementations
     #
     def inv_xor(str1, str2)
-      result = ''
-      for i in 0..(str1.size - 1) do
-        result += mod_sub(str1[i].chr, str2[i].chr)
+      #result = ''
+      #for i in 0..(str1.size - 1) do
+      #  result += mod_sub(str1[i].chr, str2[i].chr)
+      #end
+      #result
+
+      # Probably slower than above:
+      str1.split(//).zip(str2.split(//)).inject('') do |acc, ch| 
+        acc += mod_sub(ch.first, ch.last) 
       end
-      result
     end
-  
   end # Vigenere
 
 end # ToyCipher
