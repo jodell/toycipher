@@ -17,11 +17,12 @@
 * Support reading from STDIN
 * Support matrix transposition
 
-1.1 
-
+-==-
+0.4 
+-==-
 * Rudimentary frequency analysis 
 
-1.2
+1.1 
 
 * Brute-force heuristic
 

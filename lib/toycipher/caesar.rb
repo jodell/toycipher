@@ -56,18 +56,6 @@ module ToyCipher
         key
       end
     end
-
-    # Perform modular subtraction per character as: lhs - rhs
-    # TODO - Determine if this should actually go in ToyCipherUtil
-    #
-    def inv_xor(str1, str2)
-      result = ''
-      for i in 0..(str1.size - 1) do
-        result += mod_sub(str1[i].chr, str2[i].chr)
-      end
-      result
-    end
-  
   end # Caesar 
 
 end # ToyCipher

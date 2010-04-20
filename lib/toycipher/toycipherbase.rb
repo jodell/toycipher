@@ -2,6 +2,8 @@
 
 module ToyCipher
 
+  class ToyCipherException < Exception; end
+
   # Main implementation class, Provides encrypt, decrypt to be overridden. 
   #
   class ToyCipherBase
@@ -15,71 +17,18 @@ module ToyCipher
     end
 
     def encrypt
-      'Subclass responsibilty'
+      nil # Subclass responsibilty
     end
 
     def decrypt
-      'Subclass responsibility'
-    end
-
-    # Simple xor
-    #
-    def xor(str1, str2)
-      result = ''
-      for i in 0..(str1.size - 1) do
-        result += mod_add(str1[i].chr, str2[i].chr)
-      end
-      result
-    end
-
-    # Modular addition
-    #
-    def mod_add(chr1, chr2)
-      mod_shift chr1, @alph.index(chr2) 
-    end
-
-    # Shift a character by adding an offset.
-    #
-    def mod_shift(chr, offset)
-      @alph[(@alph.index(chr) + offset) % @alph.length]
-    end
-
-    # Modular subtraction
-    # result = lhs - rhs
-    #
-    def mod_sub(chr1, chr2)
-      mod_shift chr1, -@alph.index(chr2) 
+      nil # Subclass responsibility'
     end
 
     # Implementation of ROT13
     #
     def rot13(str)
-      str2 = ''
-      normalize(str).each_byte { |b| str2 += mod_shift(b.chr, @alph.size/2) }
-      str2
+      normalize(str).split(//).inject('') { |acc, b| acc += mod_shift(b, @alph.size/2) }
     end
-
-    # Rotate the alphabet, default A = 0.  Other common cases are A = 1.
-    # FIXME
-    #
-    def rotate_alphabet(offset)
-      @alph = generate_alphabet
-      (offset % @alph.size).times do @alph.unshift(@alph.pop) end
-      @alph
-    end
-
-    ##
-    # FIXME
-    #
-    def rotate_alphabet!(offset)
-      @alph = generate_alphabet
-      (offset % @alph.size).times do @alph.unshift(@alph.pop) end
-      self
-    end
-
-    # Rest the alphabet to A = 0
-    #
-    def reset_alphabet() @alph = generate_alphabet end
 
     # Pad key if needed
     #
@@ -101,8 +50,36 @@ module ToyCipher
         [self.class, self.object_id, @plaintext, @key, @ciphertext, @alph]
     end
 
-  end
+    ################
+    # Alphabet
+    #####
+    def generate_alphabet
+      ('A'..'Z').inject([]) { |acc, l| acc << l }
+    end
+
+    ##
+    # Rotate the alphabet, default A = 0.  Other common cases are A = 1.
+    #
+    def rotate_alphabet(offset)
+      alph = generate_alphabet
+      (offset % alph.size).times { alph.unshift(alph.pop) }
+      alph
+    end
+
+    def rotate_alphabet!(offset)
+      @alph = rotate_alphabet(offset)
+    end
+
+    ##
+    # Reset the alphabet to A = 0
+    #
+    def reset_alphabet!
+      @alph = generate_alphabet
+    end
+    ################
+    
+  end # ToyCipherBase
       
-end
+end # ToyCipher
 
 

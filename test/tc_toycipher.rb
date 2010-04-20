@@ -30,13 +30,13 @@ class TestToyCipher < Test::Unit::TestCase
   def test_rotate_alphabet
     alph = @tc.alph
     assert_equal alph, @tc.alph
-    @tc.rotate_alphabet 1
+    @tc.rotate_alphabet! 1
     assert_equal 'Z', @tc.alph.first
     assert_equal 'A', @tc.alph[1]
     assert_equal 'Y', @tc.alph.last
-    @tc.rotate_alphabet 2
+    @tc.rotate_alphabet! 2
     assert_equal 'Y', @tc.alph.first
-    @tc.reset_alphabet
+    @tc.reset_alphabet!
     assert_equal alph, @tc.alph
   end
 

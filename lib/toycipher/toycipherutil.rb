@@ -12,12 +12,6 @@ module ToyCipher
       puts EN_US_FREQ_RANK.join * ', '
     end
 
-    def generate_alphabet
-      alph = []
-      ('A'..'Z').each { |l| alph << l }
-      alph
-    end
-
     def distribution(str, alph)
       dist = {}
       alph.each { |l| dist[l] = 0 }
@@ -25,12 +19,7 @@ module ToyCipher
       dist
     end
 
-    def map_dist_to_rank(dist, alph = EN_US_FREQ_RANK)
-      dist_to_rank = {}
-      dist.invert.keys.sort.map.each { |count|
-      }
-    end
-   
+  
     # Pretty Print of a character frequency hash
     #
     def dist_pp(dist)
@@ -47,10 +36,20 @@ module ToyCipher
     def dist_csv(dist)
       dist.sort.inject([]) { |acc, pair| acc << pair.last }.join(',')
     end
+ 
+    # TODO
+    def map_dist_to_rank(dist, alph = EN_US_FREQ_RANK)
+      dist_to_rank = {}
+      dist.invert.keys.sort.map.each do |count|
+        #
+      end 
+    end
   
     # Normalize a string.  Remove non-alphanumeric characters and upcase it.
     # 
-    def normalize(str) str.gsub(/\W/, '').upcase end
+    def normalize(str) 
+      str.gsub(/\W/, '').upcase 
+    end
 
     # This does a matrix transposition on an m x n array of strings,
     # returning n x m
@@ -73,10 +72,71 @@ module ToyCipher
     def self.transpose(arr)
       cols = arr.first.size
       raise Exception, "#{self.class}: Inconsistent string lengths in matrix! " if arr.any? { |l| l.size != cols } 
-      arr.inject([]) { |acc, l| 
-        acc << l.split(//) 
-      }.transpose.inject([]) { |acc, l| acc << l.join }
+      arr.inject([]) { |acc, l| acc << l.split(//) }.transpose.inject([]) do |acc, l| 
+        acc << l.join
+      end
     end
 
+
+    ###########
+    # Modular arithmetic
+    #####
+
+    ##
+    # addition
+    #
+    def mod_add(chr1, chr2)
+      mod_shift chr1, @alph.index(chr2) 
+    end
+
+    ##
+    # subtraction
+    # result = lhs - rhs
+    #
+    def mod_sub(chr1, chr2)
+      mod_shift chr1, -@alph.index(chr2) 
+    end
+
+    ##
+    # Shift a character by adding an offset.
+    #
+    def mod_shift(chr, offset)
+      @alph[(@alph.index(chr) + offset) % @alph.length]
+    end
+
+    ##
+    # Perform modular subtraction per character as: lhs - rhs
+    # TODO - Performance comparison of implementations
+    # TODO - DRY
+    #
+    def inv_xor(str1, str2)
+      #result = ''
+      #for i in 0..(str1.size - 1) do
+      #  result += mod_sub(str1[i].chr, str2[i].chr)
+      #end
+      #result
+
+      # Probably slower than above:
+      str1.split(//).zip(str2.split(//)).inject('') do |acc, ch| 
+        acc += mod_sub(ch.first, ch.last) 
+      end
+    end
+
+    ##
+    # Simple xor
+    #
+    def xor(str1, str2)
+      #result = ''
+      #for i in 0..(str1.size - 1) do
+      #  result += mod_add(str1[i].chr, str2[i].chr)
+      #end
+      #result
+
+      # Probably slower than above:
+      str1.split(//).zip(str2.split(//)).inject('') do |acc, ch| 
+        acc += mod_add(ch.first, ch.last) 
+      end
+    end
   end # ToyCipherUtil
+
 end # ToyCipher

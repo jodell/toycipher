@@ -1,9 +1,7 @@
-
 require 'toycipher'
 require 'test/unit'
 
 class TestOtp < Test::Unit::TestCase
-
   def setup
    @cipher = ToyCipher::Otp.new
    @plaintext = 'abcabc'
@@ -11,12 +9,13 @@ class TestOtp < Test::Unit::TestCase
    @ciphertext = 'ACEACE'
   end
   
-  def teardown
+  def test_key_size_check
+    assert_raise ToyCipher::ToyCipherException do 
+      @cipher.encrypt(@plaintext, @key)
+    end
   end
 
   def test_encrypt
-    # TODO Need either a warning or exceptions: exceptions appropriate here?
-    assert_nil @cipher.encrypt(@plaintext, @key), @ciphertext
     @cipher.plaintext = @plaintext
     @cipher.key = @key + @key 
     assert_equal @cipher.key, @cipher.plaintext
@@ -26,6 +25,5 @@ class TestOtp < Test::Unit::TestCase
   def test_decrypt
     assert_equal @plaintext.upcase, @cipher.decrypt(@ciphertext, @key)
   end
-
 end
 
