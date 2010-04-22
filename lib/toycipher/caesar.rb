@@ -2,8 +2,11 @@
 require 'toycipher'
 
 module ToyCipher
+  
+  # Monoalphabetic cipher that shifts the alphabet by N characters
+  #
   class Caesar < ToyCipherBase
-    include ToyCipherUtil
+    #include ToyCipherUtil
     attr_writer :offset
     attr_accessor :guess
  
@@ -20,9 +23,6 @@ module ToyCipher
       @guess
     end
 
-    # Caesar encryption
-    # Monoalphabetic cipher that shifts the alphabet by N characters
-    #
     def encrypt(plaintext = @plaintext, offset = @offset)
       offset = normalize_key(offset)
       #puts "Trying to decrypt #{ciphertext} with offset #{offset}:#{offset.class}"
@@ -31,8 +31,6 @@ module ToyCipher
       @ciphertext
     end
 
-    # Caesar decryption
-    #
     def decrypt(ciphertext = @ciphertext, offset = @offset)
       offset = normalize_key(offset)
       #puts "Trying to decrypt #{ciphertext} with offset #{offset}:#{offset.class}"

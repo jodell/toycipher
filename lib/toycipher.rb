@@ -8,7 +8,10 @@ $:.unshift File.join(File.dirname(__FILE__), "/toycipher")
 module ToyCipher
   CIPHERS     = %w[caesar otp playfair vigenere shift rot13]
   VERSION     = 0.3
-  VERSION_STR = "ToyCipher v#{VERSION} by Jeffrey O'Dell <jeffrey.odell@gmail.com>, http://github.com/jodell/toycipher"
+  AUTHOR      = "Jeffrey O'Dell"
+  EMAIL       = "jeffrey.odell@gmail.com"
+  URL         = 'http://github.com/jodell/toycipher'
+  VERSION_STR = "ToyCipher v#{VERSION} by #{AUTHOR} <#{EMAIL}>, #{URL}"
 
   require 'toycipherutil'
   require 'toycipherbase'

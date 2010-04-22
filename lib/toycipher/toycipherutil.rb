@@ -1,6 +1,8 @@
 
 module ToyCipher
-  # Utility Class, provides pretty print, distribution graph, etc.
+  
+  # Utility module, provides pretty print, distribution graph, etc.
+  #
   module ToyCipherUtil
     EN_US_FREQ_RANK = %w(E R S T L N) unless defined?(EN_US_FREQ_RANK)
     
@@ -18,7 +20,6 @@ module ToyCipher
       str.each_byte { |b| dist[b.chr] = dist[b.chr] + 1 }
       dist
     end
-
   
     # Pretty Print of a character frequency hash
     #
@@ -50,9 +51,8 @@ module ToyCipher
     def normalize(str) 
       str.gsub(/\W/, '').upcase 
     end
-
-    # This does a matrix transposition on an m x n array of strings,
-    # returning n x m
+ 
+    # DEPREACTED unless there are proven performance gains over transpose
     def self.transpose2(arr)
       cols = arr.first.size
       raise Exception, "#{self.class}: Inconsistent string lengths in matrix! " if arr.any? { |l| l.size != cols } 
@@ -69,6 +69,8 @@ module ToyCipher
       ans 
     end
 
+    # This does a matrix transposition on an m x n array of strings,
+    # returning n x m
     def self.transpose(arr)
       cols = arr.first.size
       raise Exception, "#{self.class}: Inconsistent string lengths in matrix! " if arr.any? { |l| l.size != cols } 
@@ -78,11 +80,9 @@ module ToyCipher
     end
 
 
-    ###########
+    #######
     # Modular arithmetic
     #####
-
-    ##
     # addition
     #
     def mod_add(chr1, chr2)
@@ -103,6 +103,35 @@ module ToyCipher
     def mod_shift(chr, offset)
       @alph[(@alph.index(chr) + offset) % @alph.length]
     end
+
+    ########
+
+    # Pad key if needed
+    #
+    def pad_key(plaintext, key)
+      key += key while key.size < plaintext.size
+      key = key.slice(0, plaintext.size) if key.size > plaintext.size
+      [plaintext, key]
+    end
+
+    ########
+    # CHEAP CIPHERS
+    #####
+    
+    # One time pad encryption
+    #
+    def otp(plaintext, key)
+      results = pad_key normalize(plaintext), normalize(key)
+      xor results.first, results.last
+    end
+
+    # Implementation of ROT13
+    #
+    def rot13(str)
+      normalize(str).split(//).inject('') { |acc, b| acc += mod_shift(b, @alph.size / 2) }
+    end
+
+    ########
 
     ##
     # Perform modular subtraction per character as: lhs - rhs
@@ -137,6 +166,24 @@ module ToyCipher
         acc += mod_add(ch.first, ch.last) 
       end
     end
+
+    ########
+    # Alphabet
+    #####
+    def generate_alphabet
+      ('A'..'Z').inject([]) { |acc, l| acc << l }
+    end
+
+    ##
+    # Rotate the alphabet, default A = 0.  
+    # Other common cases are A = 1.
+    #
+    def rotate_alphabet(offset)
+      alph = generate_alphabet
+      (offset % alph.size).times { alph.unshift(alph.pop) }
+      alph
+    end
+    ########
   end # ToyCipherUtil
 
 end # ToyCipher

@@ -6,17 +6,18 @@ module ToyCipher
  class PlayfairException < Exception; end
 
  class Playfair < ToyCipherBase
-    include ToyCipherUtil
-
     attr_reader :keyblock, :ommit_letter, :fill_letter, :transforms
+   
     VALID_OMMIT_LETTERS = ['Q', 'I', 'J']
     OMMIT_DEFAULT = VALID_OMMIT_LETTERS.first
     VALID_FILL_LETTERS = ['X', 'Q']
     FILL_DEFAULT = 'X'
 
-    def initialize() 
+    def initialize
       super
-      set_ommit_letter; set_fill_letter; set_tranformations
+      set_ommit_letter
+      set_fill_letter
+      set_tranformations
     end
 
     def possible?(str = @ciphertext)
@@ -89,7 +90,7 @@ module ToyCipher
     # x1 - x0 != 0 && y1 - y0 = 0
     #    p2 = (x0 + 1, y0), p3 = (x1 + 1, y0)
     #
-   def transform_digraph(str, mode)
+    def transform_digraph(str, mode)
       l0 = xy_pos str[0].chr; l1 = xy_pos str[1].chr
       x0, y0 = l0.first, l0.last
       x1, y1 = l1.first, l1.last
@@ -122,7 +123,6 @@ module ToyCipher
     def letter_at(pos)
       @keyblock[ (pos.first) % 5 + ( (pos.last % 5) * 5) ]
     end
-
   
     # Normalize a string and return it in pairs, splitting pairs with the
     # @fill_letter and padding if it is of odd length.  Should work for both
@@ -169,7 +169,6 @@ module ToyCipher
 
     # TODO
     def to_s() super end 
-
   end # Playfair
 
 end # ToyCipher
