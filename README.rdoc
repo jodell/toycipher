@@ -1,4 +1,4 @@
-== ToyCipher ==
+== ToyCipher
 
 A ruby implementation of classic ciphers, including:
 
@@ -7,6 +7,6 @@ A ruby implementation of classic ciphers, including:
 * Vigenere
 * Caesar
 
-== Author ==
+== Author
 
 Jeffrey O'Dell <jefferey dot odell at gmail dot com>
