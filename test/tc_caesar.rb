@@ -31,5 +31,38 @@ class TestCaesarCipher < Test::Unit::TestCase
     assert_equal @plaintext, @cipher.decrypt(@ciphertext, @offset)
   end
 
+  def test_brute
+    ans = <<-ANS
+CDECDE
+BCDBCD
+ABCABC
+ZABZAB
+YZAYZA
+XYZXYZ
+WXYWXY
+VWXVWX
+UVWUVW
+TUVTUV
+STUSTU
+RSTRST
+QRSQRS
+PQRPQR
+OPQOPQ
+NOPNOP
+MNOMNO
+LMNLMN
+KLMKLM
+JKLJKL
+IJKIJK
+HIJHIJ
+GHIGHI
+FGHFGH
+EFGEFG
+DEFDEF
+ANS
+    try = @cipher.brute(@ciphertext)
+    assert_equal ans.gsub(/\n/, ''), @cipher.brute(@ciphertext).to_s
+  end
+
 end
 

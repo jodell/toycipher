@@ -22,6 +22,12 @@
 -==-
 * Rudimentary frequency analysis 
 * Caesar brute force guessing
+* LICENSE
+* Support supplying a key file 
+
+1.0
+
+* Large text testing
 
 1.1 
 

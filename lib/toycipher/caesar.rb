@@ -15,12 +15,8 @@ module ToyCipher
       @offset = 0
     end
 
-    # TODO
-    def brute
-      (0..25).each do |i|
-        (@guess ||= []) << decrypt(ciphertext, i)
-      end
-      @guess
+    def brute(ciphertext = @ciphertext)
+      @alph.inject([]) { |acc, ch| acc << decrypt(ciphertext, ch) }
     end
 
     def encrypt(plaintext = @plaintext, offset = @offset)

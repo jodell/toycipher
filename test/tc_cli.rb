@@ -168,5 +168,40 @@ ANS
     assert_equal ans, cli_out
   end
 
+  def test_brute_caesar 
+    args = "-d caesar -b 'FOOBAR'"
+    cli_out = %x[#{@cli} #{args}]
+    puts cli_out if verbose?
+    ans = <<-ANS
+ENNAZQ
+DMMZYP
+CLLYXO
+BKKXWN
+AJJWVM
+ZIIVUL
+YHHUTK
+XGGTSJ
+WFFSRI
+VEERQH
+UDDQPG
+TCCPOF
+SBBONE
+RAANMD
+QZZMLC
+PYYLKB
+OXXKJA
+NWWJIZ
+MVVIHY
+LUUHGX
+KTTGFW
+JSSFEV
+IRREDU
+HQQDCT
+GPPCBS
+FOOBAR
+ANS
+    assert_equal ans, cli_out
+  end
+
 end
 

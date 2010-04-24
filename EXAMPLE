@@ -8,6 +8,36 @@ MVV
 > toycipher -d caesar -k G mvv 
 FOO
 
+* Brute forcing caesar:
+
+> toycipher -d caesar -b foobar
+ENNAZQ
+DMMZYP
+CLLYXO
+BKKXWN
+AJJWVM
+ZIIVUL
+YHHUTK
+XGGTSJ
+WFFSRI
+VEERQH
+UDDQPG
+TCCPOF
+SBBONE
+RAANMD
+QZZMLC
+PYYLKB
+OXXKJA
+NWWJIZ
+MVVIHY
+LUUHGX
+KTTGFW
+JSSFEV
+IRREDU
+HQQDCT
+GPPCBS
+FOOBAR
+
 == Multiple keys ==
 
 > toycipher -e caesar -k G,M,A,R,K "The moose is loose"
