@@ -85,7 +85,7 @@ Could not decrypt ciphertext: Playfair Decryption:  Impossible scenario!
 
 == Analysis ==
 
-Show character frequency:
+Show character frequency with analysis flag:
 
 > toycipher -a < /tmp/shmoocon2010_1
 A: ############################        (28)

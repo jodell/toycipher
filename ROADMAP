@@ -1,19 +1,15 @@
-
 0.1
-
 * Playfair
 * Caesar
 * Vigenere
 * OTP
 
 0.2
-
 * CLI script
 * tests
 * documentation
 
 0.3 
-
 * Support reading from STDIN
 * Support matrix transposition
 
@@ -25,11 +21,12 @@
 * LICENSE
 * Support supplying a key file 
 
-1.0
+0.5
+* Ruby gem support
 
+1.0
 * Large text testing
 
 1.1 
-
 * Brute-force heuristic
 

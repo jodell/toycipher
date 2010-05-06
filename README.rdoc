@@ -7,6 +7,10 @@ A ruby implementation of classic ciphers, including:
 * Vigenere
 * Caesar
 
+== CLI
+
+Supports a command line script (SEE EXAMPLE)
+
 == Author
 
 Jeffrey O'Dell <jefferey dot odell at gmail dot com>
