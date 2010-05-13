@@ -13,20 +13,21 @@
 * Support reading from STDIN
 * Support matrix transposition
 
--==-
 0.4 
--==-
 * Rudimentary frequency analysis 
 * Caesar brute force guessing
 * LICENSE
 * Support supplying a key file 
 
+-==-
 0.5
+-==-
 * Ruby gem support
+* Basic Morse Code! 
 
 1.0
 * Large text testing
 
 1.1 
 * Brute-force heuristic
-
+* Support dict files
