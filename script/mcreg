@@ -33,7 +33,7 @@ attempts = {
   :even_movies => %w(
     WE ARE HERE THE PALE BLUE DOT
     UHF
-    THE CALL ME BRUCE
+    THEY CALL ME BRUCE
     REPO THE GENETIC OPERA
   ),
   :even_date_movies => %w(
@@ -112,3 +112,4 @@ attempts.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |name|
   puts "Total bin: #{acc.to_s(base = 2)}"
   puts "Total hex: #{acc.to_s(base = 16)}"
 end
+
