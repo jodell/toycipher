@@ -1,0 +1,121 @@
+#!/usr/bin/env ruby
+# Mystery Challenge 2010 Registration
+# http://ten-five-seven.org
+# NOTE: INCOMPLETE
+
+$: << File.expand_path(File.dirname(__FILE__) + '/../lib')
+require 'toycipher'
+
+b = ToyCipher::ToyCipherBase.new
+
+movies = %w(
+  PUMP UP THE VOLUME
+  WE ARE HERE THE PALE BLUE DOT
+  TWINS
+  UHF
+  BANCHIKWANG THE FOUL KING
+  THE CALL ME BRUCE
+  SINGING IN THE RAIN
+  REPO THE GENETIC OPERA
+)
+youtube_even = %w(
+  WE ARE HERE THE PALE BLUE DOT
+  UHF WHEEL OF FISH
+  THEY CALL ME BRUCE FUNNY FIGHT SCENE
+  REPO THE GENETIC OPERA AT THE OPERA TONIGHT
+)
+youtube_odd = %w(
+  PUMP UP THE VOLUME TRAILER
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  BANCHIKWANG THE FOUL KING
+  SINGING IN THE RAIN MOSES SUPPOSES
+)
+even_movies = %w(
+  WE ARE HERE THE PALE BLUE DOT
+  UHF
+  THE CALL ME BRUCE
+  REPO THE GENETIC OPERA
+)
+even_date_movies = %w(
+  PUMP UP THE VOLUME
+  WE ARE HERE THE PALE BLUE DOT
+  THE CALL ME BRUCE
+  REPO THE GENETIC OPERA
+  CLERKS
+)
+
+even = %w(
+  PUMP UP THE VOLUME
+  TWINS
+  UHF
+  BANCHIKWANG THE FOUL KING
+  SINGING IN THE RAIN
+  REPO THE GENETIC OPERA
+)
+
+even_youtube = %w(
+  PUMP UP THE VOLUME TRAILER
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  BANCHIKWANG THE FOUL KING
+  SINGING IN THE RAIN MOSES SUPPOSES
+)
+
+even_youtube2 = %w(
+  PUMP UP THE VOLUME TRAILER
+  WE ARE HERE THE PALE BLUE DOT
+  THEY CALL ME BRUCE FUNNY FIGHT SCENE
+  REPO THE GENETIC OPERA AT THE OPERA TONIGHT
+)
+
+odd_youtube = %w(
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  UHF WHEEL OF FISH
+  BANCHIKWANG THE FOUL KING
+  SINGING IN THE RAIN MOSES SUPPOSES
+)
+
+odd_youtube2 = %w(
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  UHF WHEEL OF FISH
+  BANCHIKWANG THE FOUL KING
+  ARMIN VAN BUUREN WHO WILL FIND ME 
+  SINGING IN THE RAIN MOSES SUPPOSES
+)
+
+youtube_titles = %w(
+  PUMP UP THE VOLUME TRAILER
+  WE ARE HERE THE PALE BLUE DOT
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  UHF WHEEL OF FISH
+  BANCHIKWANG THE FOUL KING
+  THEY CALL ME BRUCE FUNNY FIGHT SCENE
+  SINGING IN THE RAIN MOSES SUPPOSES
+  REPO THE GENETIC OPERA AT THE OPERA TONIGHT
+)
+
+every_other_youtube = %w(
+  PUMP UP THE VOLUME TRAILER
+  TWINS TONIGHT IS YOUR NIGHT BRO
+  BANCHIKWANG THE FOUL KING
+  SINGING IN THE RAIN MOSES SUPPOSES
+)
+
+
+attempts = [
+  movies, even_movies, even_date_movies, 
+  youtube_titles, youtube_even, youtube_odd, 
+  even, even_youtube, even_youtube2, odd_youtube, odd_youtube2, every_other_youtube
+]
+
+attempts.each do |att|
+  puts "Trying to act on str: #{att}"
+  str = att.join.gsub(' ', '')
+  acc = 0
+  total = str.size
+  str.each_byte { |ch| 
+    acc += b.alph.index(ch.chr.upcase) #+ 1
+  }
+  puts "Total: #{acc}" 
+  puts "Total in binary: #{acc.to_s(base = 2)}"
+  puts "Total in hex: #{acc.to_s(base = 16)}"
+end
