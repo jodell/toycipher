@@ -6,8 +6,6 @@
 $: << File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'toycipher'
 
-b = ToyCipher::ToyCipherBase.new
-
 
 attempts = { 
   :movies => %w(
@@ -93,16 +91,22 @@ attempts = {
     TWINS TONIGHT IS YOUR NIGHT BRO
     BANCHIKWANG THE FOUL KING
     SINGING IN THE RAIN MOSES SUPPOSES
-  )
+  ),
+  :simple => %w(
+    PUMP UP THE VOLUME TRAILER
+    REPO THE GENETIC OPERA AT THE OPERA TONIGHT
+  ),
 }
 
-attempts.each do |name, value|
-  puts "Trying #{name}: #{value}"
-  str = value.join.gsub(' ', '')
+@tc = ToyCipher::ToyCipherBase.new
+
+attempts.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |name|
+  puts "Trying #{name}: #{attempts[name]}"
+  str = attempts[name].join.gsub(' ', '')
   acc = 0
   total = str.size
   str.each_byte { |ch| 
-    acc += b.alph.index(ch.chr.upcase) + 1
+    acc += @tc.alph.index(ch.chr.upcase) + 1
   }
   puts "Total dec: #{acc}" 
   puts "Total bin: #{acc.to_s(base = 2)}"
