@@ -24,6 +24,7 @@
 -==-
 * Ruby gem support
 * Basic Morse Code! 
+* String extension for phone numbers
 
 1.0
 * Large text testing

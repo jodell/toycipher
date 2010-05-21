@@ -96,20 +96,75 @@ attempts = {
     PUMP UP THE VOLUME TRAILER
     REPO THE GENETIC OPERA AT THE OPERA TONIGHT
   ),
+  :omfg => %w(PWTUBTSR),
+  :omfg2 => %w(PWTRC),
+  :omfg3 => %w(PUTVTRTGOAOT),
+  :omfg4 => %w( PWTSRC ),
 }
+
+puts "bah: #{199.to_s(base = 16)}"
+puts "bah: #{199.to_s(base = 8)}"
+puts "199 in binary: #{199.to_s(base = 2)}"
+puts "fix: #{0b111000111.to_s(base = 10)}"
+puts "----"
+puts "orig: #{0b11000111.to_s(base = 10)}"
+puts "ray: #{0b110010011.to_s(base = 10)}"
+puts "fix2: #{0b11100111.to_s(base = 10)}"
+puts "fix2: #{0b11000011.to_s(base = 10)}"
+puts "best: #{0b111000111.to_s(base = 10)}"
+puts "fix2: #{0b1100011.to_s(base = 10)}"
+puts "----"
+
+puts "orig: #{0b11000111.to_s(base = 8)}"
+puts "fix2: #{0b11100111.to_s(base = 8)}"
+puts "fix2: #{0b11000011.to_s(base = 8)}"
+puts "fix2: #{0b111000111.to_s(base = 8)}"
+puts "fix2: #{0b1100011.to_s(base = 8)}"
+puts "----"
+
+puts "orig: #{0b11000111.to_s(base = 16)}"
+puts "fix2: #{0b11100111.to_s(base = 16)}"
+puts "fix2: #{0b11000011.to_s(base = 16)}"
+puts "fix2: #{0b111000111.to_s(base = 16)}"
+puts "fix2: #{0b1100011.to_s(base = 16)}"
+puts "----"
+
+puts "orig: #{0b11000111.to_s(base = 10)}"
+puts "fix2: #{0b00011000.to_s(base = 10)}"
+puts "fix2: #{0b00111100.to_s(base = 10)}"
+puts "fix2: #{0b000111000.to_s(base = 10)}"
+puts "fix2: #{0b0011100.to_s(base = 10)}"
+puts "diff #{(0b100101 - 0b111).to_s(base = 10)}"
+
+puts "----"
+
+
+
+
+puts "fix2: #{0b1100011.to_s(base = 10)}"
+puts "fix3: #{199.to_s(base = 7)}"
+puts "lost base 2: #{1057.to_s(base = 2)}"
+puts "lost: #{1057.to_s(base = 8)}"
+puts "lost base 16: #{1057.to_s(base = 16)}"
+puts "fix3: #{421.to_s(base = 2)}"
+puts "455: #{455.to_s(base = 2)}"
+puts "455: #{455.to_s(base = 16)}"
+puts "204: #{204.to_s(base = 2)}"
 
 @tc = ToyCipher::ToyCipherBase.new
 
-attempts.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |name|
-  puts "Trying #{name}: #{attempts[name]}"
-  str = attempts[name].join.gsub(' ', '')
-  acc = 0
-  total = str.size
-  str.each_byte { |ch| 
-    acc += @tc.alph.index(ch.chr.upcase) + 1
-  }
-  puts "Total dec: #{acc}" 
-  puts "Total bin: #{acc.to_s(base = 2)}"
-  puts "Total hex: #{acc.to_s(base = 16)}"
-end
+#attempts.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |name|
+#  puts "Trying #{name}: #{attempts[name]}"
+#  str = attempts[name].join.gsub(' ', '')
+#  acc = 0
+#  total = str.size
+#
+#  @all_letters = []
+#  str.each_byte { |ch| 
+#    val = @tc.alph.index(ch.chr.upcase) + 1 # A=1
+#    @all_letters << val
+#    acc += val
+#  }
+#  puts "Total dec: #{acc}, bin: #{acc.to_s(base = 2)}, hex: #{acc.to_s(base = 16)}, all letters: #{@all_letters * ', '}" 
+#end
 
