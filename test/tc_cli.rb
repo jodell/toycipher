@@ -1,7 +1,6 @@
 
-$: << File.expand_path(File.dirname(__FILE__)) + '/../lib/'
+require 'test_helper'
 require 'toycipher'
-require 'test/unit'
 require 'fileutils'
 
 def debug?

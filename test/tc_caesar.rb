@@ -1,6 +1,6 @@
-$: << File.expand_path(File.dirname(__FILE__)) + '/../lib/'
+
+require 'test_helper'
 require 'toycipher'
-require 'test/unit'
 require 'fileutils'
 
 class TestCaesarCipher < Test::Unit::TestCase
@@ -13,6 +13,11 @@ class TestCaesarCipher < Test::Unit::TestCase
   end
   
   def teardown
+  end
+
+  def test_0
+    assert_not_nil ToyCipher
+    assert_not_nil ToyCipher::Caesar
   end
 
   def test_encrypt

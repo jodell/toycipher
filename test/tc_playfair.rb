@@ -1,6 +1,5 @@
 
 require 'toycipher'
-require 'test/unit'
 
 class TestPlayfairCipher < Test::Unit::TestCase
 

@@ -6,10 +6,35 @@ A ruby implementation of classic ciphers, including:
 * One-time Pad
 * Vigenere
 * Caesar
+* Morse Code (TODO)
+* String to phone number extension: 'abc'.phone # => '234'
 
 == CLI
 
-Supports a command line script (SEE EXAMPLE)
+Supports a command line interface: 
+
+> toycipher -e caesar -k G foo 
+MVV
+ 
+(SEE EXAMPLE)
+
+== Dedication
+
+This library is dedicated primarily to 
+
+* LosT (http://ten-five-seven.org)
+* G. Mark Hardy (http://www.gmarkhardy.com)
+
+for their diabolical conundrums that inspired this library.
+
+Thanks also to Defcon & Shmoocon for hosting these events:
+
+* http://www.defcon.org
+* http://www.shmoocon.org
+
+and of course to members of Mobile Disco for late night puzzle solving (hax!)
+
+* http://haxbymobiledisco.com
 
 == Author
 

@@ -3,7 +3,7 @@ $:.unshift File.join(File.dirname(__FILE__))
 require 'toycipher'
 require 'test/unit'
 
-class TestCaesarCipher < Test::Unit::TestCase
+class TestShmooCipher < Test::Unit::TestCase
   SHMOO_CIPHER = {
    '1' => 'VFLASGGGGIUGAAGYBDAWHOEVHUUVLLHGJYOLGFGPGHALGGGOAAGGJPLLHZKAGZSLRXHSRYHKFPVKISTF',
    '2' => 'XBMGRMBULEMPBMSRGMEBYRGMGRGHFMAGNMRLRZOMGXMJRMLNBMEMUAZEGNQEQBGPSZRYZLDPYQDUGEPL',

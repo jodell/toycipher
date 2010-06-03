@@ -1,6 +1,5 @@
 
 require 'toycipher'
-require 'test/unit'
 
 class TestVigenereCipher < Test::Unit::TestCase
 
