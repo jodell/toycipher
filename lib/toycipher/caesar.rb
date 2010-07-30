@@ -39,7 +39,7 @@ module ToyCipher
     def normalize_key(key)
       case key 
       when String
-        if key =~ /[0-9]/ 
+        if key =~ /[0-9]+/ 
           key = key.to_i + 1
         elsif key =~ /[A-Z]/
           key = @alph.index(key.upcase) + 1

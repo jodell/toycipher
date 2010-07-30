@@ -1,4 +1,3 @@
-
 module ToyCipher
   
   # Utility module, provides pretty print, distribution graph, etc.
@@ -48,8 +47,10 @@ module ToyCipher
   
     # Normalize a string.  Remove non-alphanumeric characters and upcase it.
     # 
+    # FIXME: TEMPORARY
+    # - shouldn't assume digits are implicitly in the alphabet
     def normalize(str) 
-      str.gsub(/\W/, '').upcase 
+      str.gsub(/\W/, '').upcase #.gsub(/\s(\d+)\s/, '')
     end
  
     # DEPREACTED unless there are proven performance gains over transpose

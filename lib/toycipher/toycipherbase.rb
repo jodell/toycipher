@@ -9,7 +9,7 @@ module ToyCipher
     include ToyCipherUtil
     attr_accessor :plaintext, :ciphertext, :key, :alph
 
-    def initialize
+    def initialize(options = {})
       @alph = generate_alphabet unless defined?(@alph)
       @plaintext, @key, @ciphertext = '', '', ''
     end

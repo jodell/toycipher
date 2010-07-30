@@ -21,10 +21,14 @@ class OptParseToyCipher
           puts "Set options[:fill] to #{fill}" if options[:debug]
           options[:fill] = fill
         }
+        opts.on("-n", "--numeric", "Convert numbers to alpha") { options[:numeric] = true }
         opts.on("-k", "--key key(s)", "Encryption Key(s) separated by ','") { |k| 
           puts "Set key to '#{k}'" if options[:debug]
           options[:key] = k 
         }
+        opts.on("-m" "--matrix dimensions", "Display stream as m x n matrix with m,n") do |dim|
+          options[:matrix] = dim
+        end
         opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") do |f| 
           options[:outfile] = f 
         end 
@@ -107,6 +111,7 @@ def print_result(results)
       end
       result.gsub!(/z/i, ' ')
     end
+
     #puts "result: #{result}"
     (@all_results ||= []) << result
   end
@@ -114,7 +119,20 @@ def print_result(results)
   if @options[:outfile]
     File.open(@options[:outfile], 'w') { |f| f << @all_results * "\n" }
   else
-    STDOUT.puts @all_results * "\n"
+    if matrix = @options[:matrix]
+      m, n = matrix.split('x')
+      #puts "Will try to format to #{m} x #{n}"
+      # FIXME: ruby 1.9
+      @all_results.each do |res|
+        res.split(//).each_with_index do |b, i|
+          print b
+          print "\n" if (i + 1) % m.to_i == 0
+        end
+        print "\n"
+      end
+    else
+      STDOUT.puts @all_results * "\n"
+    end
   end
 end
 
@@ -131,6 +149,8 @@ end
 prepare_input_file if @options[:infile]
 pp @options if @options[:debug]
 
+
+# Decipher case
 if @options[:key]
   @keys.each do |k|
     @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new" # shouldn't have to do this per key
@@ -165,8 +185,9 @@ if @options[:cipher]
   @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new" # shouldn't have to do this per key
 end
 
-@cipher ||= ToyCipher::ToyCipherBase.new
+@cipher ||= ToyCipher::ToyCipherBase.new(:numeric => @options[:numeric])
 
+# Analysis
 if @options[:analysis] 
   if @options[:decrypt]
     @cipher.frequency @options[:ciphertext]
@@ -179,9 +200,10 @@ if @options[:analysis]
   end
 end
 
+# Brute Forcing
 if @options[:brute]
   puts "Trying to brute force #{@options[:ciphertext]}" if @options[:verbose]
-  puts @cipher.brute @options[:ciphertext]
+  puts print_result(@cipher.brute @options[:ciphertext])
 end
 
 
