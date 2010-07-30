@@ -6,7 +6,7 @@
 $:.unshift File.join(File.dirname(__FILE__), "/toycipher")
 
 module ToyCipher
-  CIPHERS     = %w[caesar otp playfair vigenere shift rot13]
+  CIPHERS     = %w[caesar otp playfair vigenere shift rot13 morse]
   VERSION     = 0.3
   AUTHOR      = "Jeffrey O'Dell"
   EMAIL       = "jeffrey.odell@gmail.com"
@@ -19,4 +19,5 @@ module ToyCipher
   require 'vigenere'
   require 'otp'
   require 'playfair'
+  require 'morse'
 end 
