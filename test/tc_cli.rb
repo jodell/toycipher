@@ -202,5 +202,11 @@ ANS
     assert_equal ans, cli_out
   end
 
+  def test_morse
+    args = "-d morse '.... .- ...- . ..-. ..- -. .--. .- ... ... .-- --- .-. -.. --... ..... ..... --... .... . .-.. .-.. --- .... .- ...- . ..-. ..- -.'"
+    cli_out = %x[]
+
+  end
+
 end
 

@@ -26,7 +26,7 @@ class OptParseToyCipher
           puts "Set key to '#{k}'" if options[:debug]
           options[:key] = k 
         }
-        opts.on("-m" "--matrix dimensions", "Display stream as m x n matrix with m,n") do |dim|
+        opts.on("-m", "--matrix dimensions", "Display stream as m x n matrix with m,n") do |dim|
           options[:matrix] = dim
         end
         opts.on("-o", "--output-file [file]", "Output file for results, defaults to STDOUT") do |f| 
@@ -149,6 +149,7 @@ end
 prepare_input_file if @options[:infile]
 pp @options if @options[:debug]
 
+
 # Decipher case
 if @options[:key]
   @keys.each do |k|
@@ -170,10 +171,15 @@ if @options[:key]
     rescue Exception => pf
       STDOUT.puts "Could not decrypt ciphertext: #{pf.message}"
       puts pf.backtrace * "\n" if @options[:debug]
-      exit -1
+      exit 1
     end
     (@results ||= []) << @result
   end
+end
+
+if @options[:cipher] =~ /morse/i
+  @cipher = instance_eval "ToyCipher::#{@options[:cipher]}.new" # shouldn't have to do this per key
+  (@results ||= []) << @cipher.decrypt(@options[:ciphertext])
 end
 
 print_result(@results) if @results
