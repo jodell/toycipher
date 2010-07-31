@@ -149,7 +149,6 @@ end
 prepare_input_file if @options[:infile]
 pp @options if @options[:debug]
 
-
 # Decipher case
 if @options[:key]
   @keys.each do |k|
@@ -158,7 +157,6 @@ if @options[:key]
       puts "Fill letter set to #{@options[:fill]}" if @options[:debug]
       @cipher.set_fill_letter @options[:fill] if @cipher.respond_to?(:set_fill_letter)
     end
-    
     puts "Running on key: #{k}" if @options[:verbose]
     begin
       @result =
@@ -203,7 +201,7 @@ end
 # Brute Forcing
 if @options[:brute]
   puts "Trying to brute force #{@options[:ciphertext]}" if @options[:verbose]
-  puts print_result(@cipher.brute @options[:ciphertext])
+  print_result(@cipher.brute @options[:ciphertext])
 end
 
 
