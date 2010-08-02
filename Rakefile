@@ -21,7 +21,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "toycipher"
-  s.version = "0.5" # FIXME
+  s.version = IO.readlines(File.dirname(__FILE__) + '/VERSION', 'r').first.chomp
   s.author = "Jeffrey ODell"
   s.email = "jeffrey.odell@gmail.com"
   s.homepage = "http://github.com/jodell/toycipher"

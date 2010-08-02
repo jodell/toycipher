@@ -20,4 +20,5 @@ module ToyCipher
   require 'otp'
   require 'playfair'
   require 'morse'
+  require 'substitution'
 end 

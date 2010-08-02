@@ -19,15 +19,16 @@
 * LICENSE
 * Support supplying a key file 
 
--==-
 0.5
--==-
 * String extension for phone numbers
 * Ruby gem support
 * matrix display (m x n) 
 
+-==-
 0.6
+-==-
 * Basic Morse Code! 
+* substitution cipher
 
 1.0
 * Large text testing
