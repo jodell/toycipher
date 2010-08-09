@@ -1,4 +1,6 @@
 
+$: << File.expand_path(File.dirname(__FILE__) + '/../lib')
+require 'toycipher'
 class String
   LETTER_A_VALUE = 97 unless defined?(LETTER_A_VALUE) # ASCII value of 'a'
  
@@ -43,8 +45,19 @@ class String
       end
     end
   end
+
+  # NOTE: Might want to switch to class method to avoid all of these allocations
+  def to_morse
+    ToyCipher::Morse.new.encrypt(self)
+  end
+
+  def from_morse
+    ToyCipher::Morse.new.decrypt(self)
+  end
 end
 
 #puts "abcdefghijklmnopqrstuvwxyz".phone
 #puts "ABCDEFGHIJKLMNOPQRSTUVWXYZ".phone(:legacy)
 #puts "THIS IS A TEST".phone
+#puts '.... .- ...- . ..-. ..- -. .--. .- ... ... .-- --- .-. -.. --... ..... ..... --... .... . .-.. .-.. --- .... .- ...- . ..-. ..- -.'.from_morse
+#puts 'HAVEFUNPASSWORD7557HELLOHAVEFUN'.to_morse

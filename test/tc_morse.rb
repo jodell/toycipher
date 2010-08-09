@@ -11,7 +11,7 @@ class TestMorse < Test::Unit::TestCase
 
   def setup
     @cipher = ToyCipher::Morse.new
-    @mc2010_ciphetext = '.... .- ...- . ..-. ..- -. .--. .- ... ... .-- --- .-. -.. --... ..... ..... --... .... . .-.. .-.. --- .... .- ...- . ..-. ..- -.'
+    @mc2010_ciphertext = '.... .- ...- . ..-. ..- -. .--. .- ... ... .-- --- .-. -.. --... ..... ..... --... .... . .-.. .-.. --- .... .- ...- . ..-. ..- -.'
     @mc2010_plaintext = 'HAVEFUNPASSWORD7557HELLOHAVEFUN'
   end
 
@@ -20,13 +20,8 @@ class TestMorse < Test::Unit::TestCase
 
   def test_morse
     assert @cipher.is_a?(ToyCipher::Morse)
+    assert_equal @mc2010_plaintext, @cipher.decrypt(@mc2010_ciphertext)
+    assert_equal @mc2010_ciphertext, @cipher.encrypt(@mc2010_plaintext)
   end
-
-  def test_cli
-    assert_equal @mc2010_plaintext, @cipher.decrypt(@mc2010_ciphetext)
-  end
-
-
-
 
 end

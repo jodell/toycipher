@@ -28,21 +28,17 @@ class ToyCipher::Morse < ToyCipher::ToyCipherBase
   end
   
   def encrypt(plaintext = @plaintext)
-    result = ''
-    plaintext.split(' ').each do |c|
-      next unless c =~ /\.|-/
-      result += LETTER[c]
-    end
-    result
+    plaintext.upcase.split(//).inject([]) do |acc, c|
+      next unless LETTER.keys.include?(c)
+      acc << LETTER[c]
+    end * ' '
   end
   
   def decrypt(ciphertext = @ciphertext)
-    result = ''
-    ciphertext.split(' ').each do |c|
-      next unless c =~ /\.|-/
-      result += LETTER.invert[c]
+    ciphertext.split(' ').inject('') do |acc, c|
+      next unless LETTER.values.include?(c)
+      acc += LETTER.invert[c]
     end
-    result
   end
 
   def normalize(string)

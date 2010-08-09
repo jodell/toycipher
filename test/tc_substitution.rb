@@ -31,8 +31,8 @@ CKQAL
 UIQ
 EoC
     @cipher.key = key
-    puts @cipher.key.sort.inspect
-    puts @cipher.decrypt(ciphertext)
+    #puts @cipher.key.sort.inspect
+    #puts @cipher.decrypt(ciphertext)
     
     # 'WE SAY AGAIN DELIBERATELY THAT HUMAN INGENUITF CANNOT
     # CONCOCT A CYPHER WHICH HUMAN INGENUITY CANNOT RESOLVE'
